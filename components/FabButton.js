@@ -19,7 +19,6 @@ const style = {
     borderColor: Color.gray
   },
   buttonText: {
-    fontSize: 40,
     color: Color.white
   }
 }
@@ -30,11 +29,10 @@ class Fab extends Component {
       <>
       <TouchableOpacity
         style={style.button}
-        onPress={() => {
-        }}
+        onPress={this.props.onPress}
         {...this.props}
       >
-        <Text style={style.buttonText}> + </Text>
+        <Text style={{...style.buttonText,...this.props.textStyle}}> {this.props.text} </Text>
       </TouchableOpacity>
       </>
     );
