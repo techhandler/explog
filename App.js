@@ -1,114 +1,91 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from "react"
+import { Text, View, StyleSheet, BackHandler, Alert } from "react-native"
+import ViewPagerAndroid from '@react-native-community/viewpager'
+import { Ledger, InsertLedger } from "./components"
+import { Color, currentScreen } from "./components/Constants"
+import { initiateDb } from './db'
 
-import React, {Fragment} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+export default class App extends Component {
+  state = {
+    stack: ['Ledger'],
+    currentScreen: currentScreen.insertLedger
+  }
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  setGlobalState = (obj) => {
+    this.setState({...obj}, () => console.log(this.state))
+  }
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+  backAction = () => {
+    if (this.state.stack.length) {
+      let [currentScreen, ...rest] = this.state.stack
+      this.setGlobalState({currentScreen, stack: [...rest]})
+    } else {
+      Alert.alert("Exit App", "Are you sure you want to Exit?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        {text: "Exit", onPress: () => BackHandler.exitApp()}
+      ])
+    }
+    return true
+  }
+
+  componentDidMount() {
+    initiateDb()
+    this.backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.backAction
+    )
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove()
+  }
+
+  render() {
+    return (
+      <ViewPagerAndroid style={styles.viewPager} initialPage={0}>
+        <View key="1">
+          <Text style={styles.header}>CHATS</Text>
+          <View style={{flex: 1}}>
+            {this.state.currentScreen === 'Ledger' &&
+            <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
+
+            {this.state.currentScreen === currentScreen.insertLedger && <InsertLedger/>}
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
+        </View>
+        <View key="2">
+          <Text>Second Page</Text>
+        </View>
+      </ViewPagerAndroid>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
+  text: {
     fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+    fontWeight: "bold"
   },
-  highlight: {
-    fontWeight: '700',
+  viewPager: {
+    flex: 1
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  pageStyle: {
+    alignItems: 'center',
+    padding: 20
   },
-});
-
-export default App;
+  header: {
+    backgroundColor: Color.blue,
+    fontSize: 24,
+    padding: 15,
+    textAlign: 'center',
+    color: Color.white
+  }
+})
