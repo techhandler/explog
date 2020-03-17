@@ -1,26 +1,48 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, FlatList, Picker, Alert } from "react-native"
+import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid } from "react-native"
 import FabButton from './FabButton'
 import { Color, style } from './Constants'
-import db from '../db'
+import { insertLedger } from '../db'
 
 class InsertLedger extends Component {
   state = {
-    expenseName: "",
-    expenseAmount: 0,
+    ledgerName: "",
+    ledgerAmount: '',
     category: ['1', '2', '3', '4'],
     selectedCategory: '',
     notes: '',
+    selectedDate: '',
+    accountId: '',
     showCalender: false
   }
 
   handleOnSave = async () => {
-    try {
-      await db.table('ledger').insert(this.state)
-      console.log("value saved")
-      console.log(await db.table('ledger').find())
-    } catch (e) {
-      // saving error
+    let isError = false
+    if (!validate(this.state, 'ledgerName')) {
+      ToastAndroid.show('Name is mandatory', ToastAndroid.SHORT)
+      isError = true
+    }
+    if (!validate(this.state, 'ledgerAmount')) {
+      ToastAndroid.show('Amount is mandatory', ToastAndroid.LONG)
+      isError = true
+    }
+    if (!validate(this.state, 'selectedCategory')) {
+      ToastAndroid.show('Category is mandatory', ToastAndroid.LONG)
+      isError = true
+    }
+    if (!isError) {
+      const res = await insertLedger(this.state)
+      console.log('resrser', res)
+      if (res) {
+        this.setState({
+          ledgerName: "",
+          ledgerAmount: '',
+          selectedCategory: '',
+          notes: '',
+          selectedDate: '',
+          accountId: ''
+        })
+      }
     }
   }
 
@@ -29,20 +51,19 @@ class InsertLedger extends Component {
     return (
       <View style={style.paper}>
 
-
         <TextInput
           style={style.inputText}
-          onChangeText={expenseName => this.setState({expenseName})}
+          onChangeText={ledgerName => this.setState({ledgerName})}
           placeholder={'Expense'}
-          // value={value}
+          value={this.state.ledgerName}
         />
         <View style={{height: 20}}/>
         <TextInput
           style={style.inputText}
-          onChangeText={expenseAmount => this.setState({expenseAmount})}
+          onChangeText={ledgerAmount => this.setState({ledgerAmount})}
           placeholder={'0.00'}
-          keyboardType={'numeric'}
-          // value={value}
+          keyboardType={'decimal-pad'}
+          value={this.state.ledgerAmount+''}
         />
         <View style={{height: 20}}/>
         <Picker
@@ -70,6 +91,7 @@ class InsertLedger extends Component {
         <FabButton
           text="*"
           onPress={() => this.handleOnSave()}
+          // style={{backgroundColor: Color.blue}}
         />
       </View>
     )
@@ -77,3 +99,16 @@ class InsertLedger extends Component {
 }
 
 export default InsertLedger
+
+
+const validate = (obj, key) => {
+  if (obj.hasOwnProperty(key)) {
+    const value = obj[key]
+    if (typeof value === 'string' && !value.length) {
+      return false
+    } else if (typeof value === 'number' && !(value > 0))
+      return false
+    return true
+  }
+  return false
+}

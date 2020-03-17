@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {Text, TouchableOpacity} from "react-native"
-import {Color} from './Constants';
+import React, { Component } from 'react'
+import { Text, TouchableOpacity } from "react-native"
+import { Color } from './Constants'
 
-const style = {
+const styles = {
   button: {
     position: 'absolute',
     backgroundColor: Color.blue,
@@ -23,20 +23,15 @@ const style = {
   }
 }
 
-class Fab extends Component {
-  render() {
-    return (
-      <>
-      <TouchableOpacity
-        style={style.button}
-        onPress={this.props.onPress}
-        {...this.props}
-      >
-        <Text style={{...style.buttonText,...this.props.textStyle}}> {this.props.text} </Text>
-      </TouchableOpacity>
-      </>
-    );
-  }
-}
+const Fab = ({style, textStyle, text, onPress, ...rest}) => <>
+  <TouchableOpacity
+    style={{...styles.button, ...style}}
+    onPress={onPress}
+    {...rest}
+  >
+    <Text style={{...styles.buttonText, ...textStyle}}> {text} </Text>
+  </TouchableOpacity>
+</>
 
-export default Fab;
+
+export default Fab
