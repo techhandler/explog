@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button } from "react-native"
 import ViewPagerAndroid from '@react-native-community/viewpager'
-import { Ledger, InsertLedger } from "./components"
+import { Ledger, InsertLedger, Accounts } from "./components"
 import { Color, currentScreen } from "./components/Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -48,7 +48,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <ViewPagerAndroid style={styles.viewPager} initialPage={0}>
+      <ViewPagerAndroid style={styles.viewPager} initialPage={2}>
         <View key="1">
           <Text style={styles.header}>CHATS</Text>
           <View style={{flex: 1}}>
@@ -59,7 +59,8 @@ export default class App extends Component {
           </View>
         </View>
         <View key="2">
-          <Text>Second Page</Text>
+          <Text style={styles.header}>ACC</Text>
+          <Accounts/>
         </View>
         <View key="3">
           <Text>Dev Page</Text>
@@ -74,9 +75,14 @@ export default class App extends Component {
             title="Seed Ledger"
             onPress={async () => {
               await AsyncStorage.setItem('ledger', JSON.stringify([
-                {lI: '1', lN: '1st Testing', lA: 10, lD: Date.now() - 20000},
-                {lI: '2', lN: '2nd Testing', lA: 20, lD: Date.now() - 4000000},
-                {lI: '3', lN: '3rd Testing', lA: 30, lD: Date.now() - 1400000}
+                {lI: '1', lN: '1st Testing', lA: 10, lD: Date.now() - 20000, aI: '1'},
+                {lI: '2', lN: '2nd Testing', lA: 20, lD: Date.now() - 4000000, aI: '1'},
+                {lI: '3', lN: '3rd Testing', lA: 30, lD: Date.now() - 1400000, aI: '2'}
+              ]))
+              await AsyncStorage.setItem('account', JSON.stringify([
+                {aI: '1', aN: 'A1', aA: 20000},
+                {aI: '2', aN: 'A2', aA: 40000},
+                {aI: '3', aN: 'A3', aA: 60000}
               ]))
               console.log("seeding done")
             }}/>
@@ -84,7 +90,8 @@ export default class App extends Component {
           <Button
             title="Show Ledger"
             onPress={async () => {
-              console.log('db>>', JSON.parse(await AsyncStorage.getItem('ledger')))
+              console.log('ledger>>', JSON.parse(await AsyncStorage.getItem('ledger')))
+              console.log('account>>', JSON.parse(await AsyncStorage.getItem('account')))
             }}/>
         </View>
       </ViewPagerAndroid>
