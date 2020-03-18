@@ -48,7 +48,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <ViewPagerAndroid style={styles.viewPager} initialPage={2}>
+      <ViewPagerAndroid style={styles.viewPager} initialPage={1}>
         <View key="1">
           <Text style={styles.header}>CHATS</Text>
           <View style={{flex: 1}}>
@@ -80,9 +80,14 @@ export default class App extends Component {
                 {lI: '3', lN: '3rd Testing', lA: 30, lD: Date.now() - 1400000, aI: '2'}
               ]))
               await AsyncStorage.setItem('account', JSON.stringify([
-                {aI: '1', aN: 'A1', aA: 20000},
-                {aI: '2', aN: 'A2', aA: 40000},
-                {aI: '3', aN: 'A3', aA: 60000}
+                {aI: '1', aN: 'A-1', aA: 20000, d: false},
+                {aI: '2', aN: 'A-2', aA: 40000, d: true},
+                {aI: '3', aN: 'A-3', aA: 60000, d: false}
+              ]))
+              await AsyncStorage.setItem('category', JSON.stringify([
+                {cI: '1', cN: 'Other'},
+                {cI: '2', cN: 'C-2'},
+                {cI: '3', cN: 'C-3'}
               ]))
               console.log("seeding done")
             }}/>
