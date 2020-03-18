@@ -74,9 +74,9 @@ export default class App extends Component {
             title="Seed Ledger"
             onPress={async () => {
               await AsyncStorage.setItem('ledger', JSON.stringify([
-                {lI: 1, lN: '1st Testing', lA: 10, lD: Date.now()-20000},
-                {lI: 2, lN: '2nd Testing', lA: 20, lD: Date.now()-4000000},
-                {lI: 3, lN: '3rd Testing', lA: 30, lD: Date.now()-1400000}
+                {lI: '1', lN: '1st Testing', lA: 10, lD: Date.now() - 20000},
+                {lI: '2', lN: '2nd Testing', lA: 20, lD: Date.now() - 4000000},
+                {lI: '3', lN: '3rd Testing', lA: 30, lD: Date.now() - 1400000}
               ]))
               console.log("seeding done")
             }}/>

@@ -4,7 +4,7 @@ import { dataBase } from '../components/Constants'
 
 const insertLedger = async ({...obj}) => {
   let newObj = {
-    [fields.ledgerId]: Date.now(),
+    [fields.ledgerId]: Date.now() + '',
     [fields.ledgerName]: obj.ledgerName,
     [fields.ledgerAmount]: Number(obj.ledgerAmount),
     [fields.ledgerCategory]: obj.selectedCategory,
@@ -14,14 +14,31 @@ const insertLedger = async ({...obj}) => {
   }
   try {
     await db.table(dataBase.ledger).insert(newObj)
-    return true
+    return {success: true}
   } catch (err) {
     console.log(err)
-    return false
+    return {success: false}
   }
 }
 
-export { initiateDb, insertLedger }
+const fetchAllLedger = async () => {
+  try {
+    let result = await db.table(dataBase.ledger).find()
+    result = result.map(a => ({
+      ledgerId: a[fields.ledgerId],
+      ledgerName: a[fields.ledgerName],
+      ledgerAmount: a[fields.ledgerAmount],
+      ledgerDate: a[fields.ledgerDate],
+      ledgerCategory: a[fields.ledgerCategory]
+    }))
+    console.log("datatatatatt", result)
+    return {success: true, result}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
+
+export { initiateDb, insertLedger, fetchAllLedger }
 
 
 const fields = {

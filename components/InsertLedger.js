@@ -33,7 +33,7 @@ class InsertLedger extends Component {
     if (!isError) {
       const res = await insertLedger(this.state)
       console.log('resrser', res)
-      if (res) {
+      if (res.success) {
         this.setState({
           ledgerName: "",
           ledgerAmount: '',
@@ -63,7 +63,7 @@ class InsertLedger extends Component {
           onChangeText={ledgerAmount => this.setState({ledgerAmount})}
           placeholder={'0.00'}
           keyboardType={'decimal-pad'}
-          value={this.state.ledgerAmount+''}
+          value={this.state.ledgerAmount + ''}
         />
         <View style={{height: 20}}/>
         <Picker
