@@ -2,18 +2,25 @@ import React, { Component } from 'react'
 import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid } from "react-native"
 import FabButton from './FabButton'
 import { Color, style } from './Constants'
-import { insertLedger } from '../db'
+import { insertLedger, fetchAllAccounts, fetchAllCategories } from '../db'
 
 class InsertLedger extends Component {
   state = {
     ledgerName: "",
     ledgerAmount: '',
-    category: ['1', '2', '3', '4'],
+    category: [],
     selectedCategory: '',
     notes: '',
     selectedDate: '',
     accountId: '',
+    accounts: [],
     showCalender: false
+  }
+
+  async componentDidMount() {
+    const accounts = await fetchAllAccounts()
+    const category = await fetchAllCategories()
+    this.setState({accounts, category})
   }
 
   handleOnSave = async () => {
@@ -71,7 +78,7 @@ class InsertLedger extends Component {
           style={{height: 50}}
           onValueChange={selectedCategory => this.setState({selectedCategory})}>
           {
-            this.state.category.map(a => <Picker.Item label={a} value={a} key={a}/>)
+            this.state.category.map(a => <Picker.Item label={a.categoryName} value={a.categoryId} key={a.categoryId}/>)
           }
         </Picker>
 
@@ -83,6 +90,15 @@ class InsertLedger extends Component {
           editable
           maxLength={200}
         />
+
+        <Picker
+          selectedValue={this.state.accountId}
+          style={{height: 50}}
+          onValueChange={accountId => this.setState({accountId})}>
+          {
+            this.state.accounts.map(a => <Picker.Item label={a.accountName} value={a.accountId} key={a.accountId}/>)
+          }
+        </Picker>
 
         <View>
           <Text>Date</Text>

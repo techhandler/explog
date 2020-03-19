@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, FlatList, TouchableOpacity } from "react-native"
 import { Color, currentScreen, style } from './Constants'
 import FabButton from './FabButton'
-import { fetchAllLedger } from "../db"
+import { fetchAllAccounts } from "../db"
 
 
 const styles = StyleSheet.create({
   view: {flex: 1},
   panel: {
     flex: 1,
-    alignItems:'center'
+    alignItems: 'center'
   },
   item: {
     padding: 30,
@@ -22,18 +22,12 @@ const styles = StyleSheet.create({
 
 
 class Accounts extends Component {
-  state = {
-    data: [
-      {accountName: 'A1', accountAmount: 10000},
-      {accountName: 'A2', accountAmount: 40000},
-      {accountName: 'A3', accountAmount: 60000}
-    ]
+  state = {accountsData: []}
+
+  async componentDidMount() {
+    let {result: accountsData} = await fetchAllAccounts()
+    this.setState({accountsData})
   }
-  //
-  // async componentDidMount() {
-  //   let {result: listData} = await fetchAllLedger()
-  //   this.setState({listData})
-  // }
 
   render() {
     return (
@@ -41,9 +35,9 @@ class Accounts extends Component {
         <View style={styles.panel}>
 
 
-          {this.state.data.map(a => <View style={{
+          {this.state.accountsData.map(a => <View style={{
             borderWidth: 1, width: '80%', height: 150
-          }} key={a.accountName}>
+          }} key={a.accountId}>
             <Text>{a.accountName}</Text>
             <Text>{a.accountAmount}</Text>
           </View>)}

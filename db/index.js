@@ -1,8 +1,9 @@
 import db, { initiateDb } from './db'
 import { dataBase } from '../components/Constants'
 
+export { initiateDb }
 
-const insertLedger = async ({...obj}) => {
+export const insertLedger = async ({...obj}) => {
   let newObj = {
     [fields.ledgerId]: Date.now() + '',
     [fields.ledgerName]: obj.ledgerName,
@@ -21,7 +22,7 @@ const insertLedger = async ({...obj}) => {
   }
 }
 
-const fetchAllLedger = async () => {
+export const fetchAllLedger = async () => {
   try {
     let result = await db.table(dataBase.ledger).find()
     result = result.map(a => ({
@@ -38,7 +39,32 @@ const fetchAllLedger = async () => {
   }
 }
 
-export { initiateDb, insertLedger, fetchAllLedger }
+export const fetchAllAccounts = async () => {
+  try {
+    let result = await db.table(dataBase.account).find()
+    result = result.map(a => ({
+      accountId: a[fields.accountId],
+      accountName: a[fields.accountName],
+      accountAmount: a[fields.accountAmount]
+    }))
+    return {success: true, result}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
+
+export const fetchAllCategories = async () => {
+  try {
+    let result = await db.table(dataBase.category).find()
+    result = result.map(a => ({
+      categoryId: a[fields.categoryId],
+      categoryName: a[fields.categoryName]
+    }))
+    return {success: true, result}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
 
 
 const fields = {
