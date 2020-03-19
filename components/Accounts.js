@@ -44,6 +44,11 @@ class Accounts extends Component {
 
 
         </View>
+        <FabButton
+          text="*"
+          onPress={() => console.log("ww")}
+          // style={{backgroundColor: Color.blue}}
+        />
       </View>
     )
   }

@@ -45,7 +45,8 @@ export const fetchAllAccounts = async () => {
     result = result.map(a => ({
       accountId: a[fields.accountId],
       accountName: a[fields.accountName],
-      accountAmount: a[fields.accountAmount]
+      accountAmount: a[fields.accountAmount],
+      defaultAccount: a[fields.accountDefault]
     }))
     return {success: true, result}
   } catch (error) {
@@ -77,6 +78,7 @@ const fields = {
   accountId: 'aI',
   accountName: 'aN',
   accountAmount: 'aA',
+  accountDefault: 'd',
   categoryId: 'cI',
   categoryName: 'cN'
 }

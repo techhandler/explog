@@ -75,9 +75,10 @@ export default class App extends Component {
             title="Seed Ledger"
             onPress={async () => {
               await AsyncStorage.setItem('ledger', JSON.stringify([
-                {lI: '1', lN: '1st Testing', lA: 10, lD: Date.now() - 20000, aI: '1'},
-                {lI: '2', lN: '2nd Testing', lA: 20, lD: Date.now() - 4000000, aI: '1'},
-                {lI: '3', lN: '3rd Testing', lA: 30, lD: Date.now() - 1400000, aI: '2'}
+                {lI: "1", lN: "L-4", lA: 400, lC: "1", lNo: "Testing 4", lD: 1584884861245, aI: "3"},
+                {lI: "2", lN: "L-3", lA: 540, lC: "2", lNo: "Testing 3", lD: 1584884703808, aI: "1"},
+                {lI: "3", lN: "L-2", lA: 200, lC: "3", lNo: "Testing 2", lD: 1584884528782, aI: "3"},
+                {lI: "4", lN: "L-1", lA: 100, lC: "1", lNo: "Testing 1", lD: 1584884455243, aI: "2"}
               ]))
               await AsyncStorage.setItem('account', JSON.stringify([
                 {aI: '1', aN: 'A-1', aA: 20000, d: false},
@@ -95,7 +96,7 @@ export default class App extends Component {
           <Button
             title="Show Ledger"
             onPress={async () => {
-              console.log('ledger>>', JSON.parse(await AsyncStorage.getItem('ledger')))
+              console.log('ledger>>', (await AsyncStorage.getItem('ledger')))
               console.log('account>>', JSON.parse(await AsyncStorage.getItem('account')))
             }}/>
         </View>

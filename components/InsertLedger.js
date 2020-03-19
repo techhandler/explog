@@ -4,23 +4,29 @@ import FabButton from './FabButton'
 import { Color, style } from './Constants'
 import { insertLedger, fetchAllAccounts, fetchAllCategories } from '../db'
 
+const initialState = {
+  ledgerName: "",
+  ledgerAmount: '',
+  selectedCategory: '',
+  notes: '',
+  selectedDate: '',
+  accountId: ''
+}
+
 class InsertLedger extends Component {
   state = {
-    ledgerName: "",
-    ledgerAmount: '',
+    ...initialState,
     category: [],
-    selectedCategory: '',
-    notes: '',
-    selectedDate: '',
-    accountId: '',
     accounts: [],
     showCalender: false
   }
 
   async componentDidMount() {
-    const accounts = await fetchAllAccounts()
-    const category = await fetchAllCategories()
-    this.setState({accounts, category})
+    const {result : accounts} = await fetchAllAccounts()
+    let accountDefault = accounts.filter(a=>a.defaultAccount);
+    accountDefault = accountDefault && accountDefault[0] ? accountDefault[0] : accounts[0];
+    const {result : category} = await fetchAllCategories()
+    this.setState({accounts, category, accountId:accountDefault.accountId})
   }
 
   handleOnSave = async () => {
@@ -41,14 +47,7 @@ class InsertLedger extends Component {
       const res = await insertLedger(this.state)
       console.log('resrser', res)
       if (res.success) {
-        this.setState({
-          ledgerName: "",
-          ledgerAmount: '',
-          selectedCategory: '',
-          notes: '',
-          selectedDate: '',
-          accountId: ''
-        })
+        this.setState({...initialState})
       }
     }
   }
@@ -83,6 +82,7 @@ class InsertLedger extends Component {
         </Picker>
 
         <TextInput
+          value={this.state.notes + ''}
           style={{borderWidth: 1}}
           multiline
           numberOfLines={16}
