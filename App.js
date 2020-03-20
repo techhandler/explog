@@ -10,11 +10,12 @@ import AsyncStorage from '@react-native-community/async-storage'
 export default class App extends Component {
   state = {
     stack: ['Ledger'],
-    currentScreen: currentScreen.insertLedger
+    currentScreen: currentScreen.insertLedger,
+    childData: {}
   }
 
   setGlobalState = (obj) => {
-    this.setState({...obj}, () => console.log(this.state))
+    this.setState({...obj})
   }
 
   backAction = () => {
@@ -56,6 +57,9 @@ export default class App extends Component {
             <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
             {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail/>}
+
+            {this.state.currentScreen === currentScreen.detailLedger &&
+            <LedgerDetail childData={this.state.childData}/>}
           </View>
         </View>
         <View key="2">
@@ -72,7 +76,7 @@ export default class App extends Component {
             }}/>
           <View style={{height: 20}}/>
           <Button
-            title="Seed Ledger"
+            title="Seed All Data"
             onPress={async () => {
               await AsyncStorage.setItem('ledger', JSON.stringify([
                 {lI: "1", lN: "L-4", lA: 400, lC: "1", lNo: "Testing 4", lD: 1584884861245, aI: "3"},
@@ -94,7 +98,7 @@ export default class App extends Component {
             }}/>
           <View style={{height: 20}}/>
           <Button
-            title="Show Ledger"
+            title="Show Data"
             onPress={async () => {
               console.log('ledger>>', (await AsyncStorage.getItem('ledger')))
               console.log('account>>', JSON.parse(await AsyncStorage.getItem('account')))

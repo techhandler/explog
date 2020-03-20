@@ -25,7 +25,8 @@ const dataBase = {
 }
 
 const currentScreen = {
-  insertLedger: 'insertLedger'
+  insertLedger: 'insertLedger',
+  detailLedger: 'detailLedger',
 }
 
 const style = {

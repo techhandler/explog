@@ -4,18 +4,17 @@ import FabButton from './FabButton'
 import { Color, style } from '../Constants'
 import { insertLedger, fetchAllAccounts, fetchAllCategories } from '../db'
 
-const initialState = {
+let initialState = {
   ledgerName: "",
   ledgerAmount: '',
-  selectedCategory: '',
-  notes: '',
-  selectedDate: '',
+  ledgerCategory: '',
+  ledgerNotes: '',
+  ledgerDate: '',
   accountId: ''
 }
 
 class LedgerDetail extends Component {
   state = {
-    ...initialState,
     category: [],
     accounts: [],
     showCalender: false
@@ -26,7 +25,13 @@ class LedgerDetail extends Component {
     let accountDefault = accounts.filter(a=>a.defaultAccount);
     accountDefault = accountDefault && accountDefault[0] ? accountDefault[0] : accounts[0];
     const {result : category} = await fetchAllCategories()
-    this.setState({accounts, category, accountId:accountDefault.accountId})
+
+    if(this.props.childData && this.props.childData.ledger){
+      console.log("thisisisiiss",this.props.childData.ledger)
+      this.setState({ accounts, category, ...this.props.childData.ledger});
+    }
+    else
+      this.setState({...initialState, accounts, category, accountId:accountDefault.accountId})
   }
 
   handleOnSave = async () => {
@@ -39,7 +44,7 @@ class LedgerDetail extends Component {
       ToastAndroid.show('Amount is mandatory', ToastAndroid.LONG)
       isError = true
     }
-    if (!validate(this.state, 'selectedCategory')) {
+    if (!validate(this.state, 'ledgerCategory')) {
       ToastAndroid.show('Category is mandatory', ToastAndroid.LONG)
       isError = true
     }
@@ -73,20 +78,20 @@ class LedgerDetail extends Component {
         />
         <View style={{height: 20}}/>
         <Picker
-          selectedValue={this.state.selectedCategory}
+          selectedValue={this.state.ledgerCategory}
           style={{height: 50}}
-          onValueChange={selectedCategory => this.setState({selectedCategory})}>
+          onValueChange={ledgerCategory => this.setState({ledgerCategory})}>
           {
             this.state.category.map(a => <Picker.Item label={a.categoryName} value={a.categoryId} key={a.categoryId}/>)
           }
         </Picker>
 
         <TextInput
-          value={this.state.notes + ''}
+          value={this.state.ledgerNotes + ''}
           style={{borderWidth: 1}}
           multiline
           numberOfLines={16}
-          onChangeText={notes => this.setState({notes})}
+          onChangeText={ledgerNotes => this.setState({ledgerNotes})}
           editable
           maxLength={200}
         />

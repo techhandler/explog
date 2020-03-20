@@ -30,9 +30,10 @@ export const fetchAllLedger = async () => {
       ledgerName: a[fields.ledgerName],
       ledgerAmount: a[fields.ledgerAmount],
       ledgerDate: a[fields.ledgerDate],
-      ledgerCategory: a[fields.ledgerCategory]
+      ledgerCategory: a[fields.ledgerCategory],
+      ledgerNotes: a[fields.ledgerNotes] || "",
+      accountId : a[fields.accountId]
     }))
-    console.log("datatatatatt", result)
     return {success: true, result}
   } catch (error) {
     return {success: false, error}

@@ -44,6 +44,12 @@ class Ledger extends Component {
                 rightUpTitle={item.ledgerAmount}
                 rightDownTitle={new Date(item.ledgerDate).toDateString()}
 
+                onPress={() => this.props.setGlobalState({
+                  currentScreen: currentScreen.detailLedger,
+                  stack: [this.props.state.currentScreen, ...this.props.state.stack],
+                  childData: {ledger : item}
+                })}
+
                 // selected={!!selected.get(item.id)}
                 // onSelect={onSelect}
               />
@@ -72,10 +78,10 @@ class Ledger extends Component {
 
 export default Ledger
 
-function Item({id, leftUpTitle, rightDownTitle, rightUpTitle, leftDownTitle, selected, onSelect}) {
+function Item({id, leftUpTitle, rightDownTitle, rightUpTitle, leftDownTitle, onPress, onSelect}) {
   return (
     <TouchableOpacity
-      onPress={() => console.log(id)}
+      onPress={onPress}
       style={[
         styles.item
         // {backgroundColor: selected ? '#6e3b6e' : '#f9c2ff'}
