@@ -1,5 +1,5 @@
 import db, { initiateDb } from './db'
-import { dataBase } from '../components/Constants'
+import { dataBase } from '../Constants'
 
 export { initiateDb }
 

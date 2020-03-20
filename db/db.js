@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import { dataBase } from '../components/Constants'
+import { dataBase } from '../Constants'
 
 export const initiateDb = () => {
   AsyncStorage.getItem(dataBase.account).then(res => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, FlatList, TouchableOpacity } from "react-native"
-import { Color, currentScreen, style } from './Constants'
+import { Color, currentScreen, style } from '../Constants'
 import FabButton from './FabButton'
 import { fetchAllAccounts } from "../db"
 

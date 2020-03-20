@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button } from "react-native"
 import ViewPagerAndroid from '@react-native-community/viewpager'
-import { Ledger, InsertLedger, Accounts } from "./components"
-import { Color, currentScreen } from "./components/Constants"
+import { Ledger, LedgerDetail, Accounts } from "./components"
+import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -55,7 +55,7 @@ export default class App extends Component {
             {this.state.currentScreen === 'Ledger' &&
             <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
-            {this.state.currentScreen === currentScreen.insertLedger && <InsertLedger/>}
+            {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail/>}
           </View>
         </View>
         <View key="2">
