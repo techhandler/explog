@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button } from "react-native"
 import ViewPagerAndroid from '@react-native-community/viewpager'
-import { Ledger, LedgerDetail, Accounts } from "./components"
+import { Ledger, LedgerDetail, Accounts, AccountDetail } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -9,8 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 export default class App extends Component {
   state = {
-    stack: ['Ledger'],
-    currentScreen: currentScreen.insertLedger,
+    stack: [currentScreen.account],
+    currentScreen: currentScreen.insertAccount,
     childData: {}
   }
 
@@ -53,7 +53,7 @@ export default class App extends Component {
         <View key="1">
           <Text style={styles.header}>CHATS</Text>
           <View style={{flex: 1}}>
-            {this.state.currentScreen === 'Ledger' &&
+            {this.state.currentScreen === currentScreen.ledger &&
             <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
             {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail/>}
@@ -64,7 +64,13 @@ export default class App extends Component {
         </View>
         <View key="2">
           <Text style={styles.header}>ACC</Text>
-          <Accounts/>
+          {this.state.currentScreen === currentScreen.account &&
+          <Accounts setGlobalState={this.setGlobalState} state={this.state} />}
+
+          {this.state.currentScreen === currentScreen.insertAccount && <AccountDetail/>}
+
+          {this.state.currentScreen === currentScreen.detailAccount &&
+          <AccountDetail childData={this.state.childData}/>}
         </View>
         <View key="3">
           <Text>Dev Page</Text>

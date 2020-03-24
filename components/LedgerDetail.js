@@ -27,7 +27,6 @@ class LedgerDetail extends Component {
     const {result : category} = await fetchAllCategories()
 
     if(this.props.childData && this.props.childData.ledger){
-      console.log("thisisisiiss",this.props.childData.ledger)
       this.setState({ accounts, category, ...this.props.childData.ledger});
     }
     else
@@ -50,7 +49,6 @@ class LedgerDetail extends Component {
     }
     if (!isError) {
       const res = await insertLedger(this.state)
-      console.log('resrser', res)
       if (res.success) {
         this.setState({...initialState})
       }

@@ -34,20 +34,26 @@ class Accounts extends Component {
       <View style={styles.view}>
         <View style={styles.panel}>
 
-
-          {this.state.accountsData.map(a => <View style={{
+          {this.state.accountsData.map(a => <TouchableOpacity style={{
             borderWidth: 1, width: '80%', height: 150
-          }} key={a.accountId}>
+          }} key={a.accountId} onPress={() => this.props.setGlobalState({
+            currentScreen: currentScreen.detailAccount,
+            stack: [this.props.state.currentScreen, ...this.props.state.stack],
+            childData: {account : a}
+          })}>
             <Text>{a.accountName}</Text>
             <Text>{a.accountAmount}</Text>
-          </View>)}
-
+          </TouchableOpacity>)}
 
         </View>
         <FabButton
-          text="*"
-          onPress={() => console.log("ww")}
-          // style={{backgroundColor: Color.blue}}
+          text={'+'}
+          onPress={() => this.props.setGlobalState({
+            currentScreen: currentScreen.insertAccount,
+            stack: [this.props.state.currentScreen, ...this.props.state.stack]
+          })
+          }
+          textStyle={{fontSize: 40}}
         />
       </View>
     )

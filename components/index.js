@@ -1,8 +1,9 @@
 import Ledger from './Ledger'
 import LedgerDetail from './LedgerDetail'
 import Accounts from './Accounts'
+import AccountDetail from "./AccountDetail"
 
-export { Accounts, Ledger, LedgerDetail }
+export { Accounts, Ledger, LedgerDetail, AccountDetail }
 
 // import {
 //   Header,
