@@ -91,25 +91,25 @@ function Item({id, onPress, data: {ledgerName, ledgerAmount, ledgerDate}, index}
     <TouchableOpacity
       onPress={onPress}
       style={[styles.item]}>
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 18, paddingBottom: 18}}>
-        <Text style={{fontSize: 26, color: '#4a6c8c'}}>{ledgerAmount}</Text>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 12, paddingBottom: 12}}>
+        <Text style={{fontSize: 22, color: '#4a6c8c'}}>{ledgerAmount}</Text>
       </View>
       <View style={{width: 1, backgroundColor: '#c9dbec', height: '100%'}}>
         {index !==0 && <View style={{
           backgroundColor: '#c9dbec',
-          width: 18,
-          height: 18,
+          width: 12,
+          height: 12,
           borderRadius: 26,
           position:'absolute',
-          top:-10,
-          left:-9,
-          borderWidth: 3,
+          top:-8,
+          left:-6,
+          borderWidth: 2,
           borderColor: '#4a6c8c'
         }}/>}
       </View>
-      <View style={{flex: 3, paddingTop: 18, paddingBottom: 18, paddingLeft: 25}}>
-        <Text style={{fontSize: 26, color: '#4a6c8c'}}>{ledgerName}</Text>
-        <Text style={{fontSize: 16, color: '#4a6c8c'}}>{ledgerDate.getDate()}-{monthNames[ledgerDate.getMonth()]}</Text>
+      <View style={{flex: 3, paddingTop: 12, paddingBottom: 12, paddingLeft: 25}}>
+        <Text style={{fontSize: 22, color: '#4a6c8c'}}>{ledgerName}</Text>
+        <Text style={{fontSize: 14, color: '#4a6c8c'}}>{ledgerDate.getDate()}-{monthNames[ledgerDate.getMonth()]}</Text>
       </View>
     </TouchableOpacity>
   )

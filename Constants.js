@@ -25,7 +25,9 @@ const dataBase = {
 }
 
 const currentScreen = {
-  home:'home',
+  ledger:'ledger',
+  account:'account',
+  category:'category',
   insertLedger: 'insertLedger',
   detailLedger: 'detailLedger',
   insertAccount: 'insertAccount',

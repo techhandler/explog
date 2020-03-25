@@ -1,6 +1,5 @@
 import React, { Component } from "react"
-import { Text, View, StyleSheet, BackHandler, Alert, Button } from "react-native"
-import ViewPagerAndroid from '@react-native-community/viewpager'
+import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity } from "react-native"
 import { Ledger, LedgerDetail, Accounts, AccountDetail } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
@@ -10,7 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 export default class App extends Component {
   state = {
     stack: [],
-    currentScreen: currentScreen.home,
+    currentScreen: currentScreen.ledger,
     childData: {}
   }
 
@@ -50,30 +49,24 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <ViewPagerAndroid style={styles.viewPager} initialPage={0}>
-          <View key="1">
-            <Text style={styles.header}>CHATS</Text>
-            <View style={{flex: 1}}>
-              {this.state.currentScreen === currentScreen.home &&
-              <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
+        <View style={styles.container}>
+          <Text style={styles.header}>{headerTitle[this.state.currentScreen]}</Text>
+          {this.state.currentScreen === currentScreen.ledger &&
+          <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
-              {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail insert={true}/>}
+          {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail insert={true}/>}
 
-              {this.state.currentScreen === currentScreen.detailLedger &&
-              <LedgerDetail childData={this.state.childData}/>}
-            </View>
-          </View>
-          <View key="2">
-            <Text style={styles.header}>ACC</Text>
-            {this.state.currentScreen === currentScreen.home &&
-            <Accounts setGlobalState={this.setGlobalState} state={this.state}/>}
+          {this.state.currentScreen === currentScreen.detailLedger &&
+          <LedgerDetail childData={this.state.childData}/>}
+          {this.state.currentScreen === currentScreen.account &&
+          <Accounts setGlobalState={this.setGlobalState} state={this.state}/>}
 
-            {this.state.currentScreen === currentScreen.insertAccount && <AccountDetail/>}
+          {this.state.currentScreen === currentScreen.insertAccount && <AccountDetail/>}
 
-            {this.state.currentScreen === currentScreen.detailAccount &&
-            <AccountDetail childData={this.state.childData}/>}
-          </View>
-          <View key="3">
+          {this.state.currentScreen === currentScreen.detailAccount &&
+          <AccountDetail childData={this.state.childData}/>}
+          {this.state.currentScreen === currentScreen.category &&
+          <View>
             <Text>Dev Page</Text>
             <Button
               title="Remove All"
@@ -111,8 +104,25 @@ export default class App extends Component {
                 console.log('account>>', JSON.parse(await AsyncStorage.getItem('account')))
               }}/>
           </View>
-        </ViewPagerAndroid>
-        <View style={styles.footer}><Text>TEST</Text></View>
+          }
+          <View style={styles.footer}>
+            <TouchableOpacity
+              style={{flex: 1, alignItems: 'center'}}
+              onPress={() => this.setState({currentScreen: currentScreen.ledger})}>
+              <Text>Expense</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{flex: 1, alignItems: 'center'}}
+              onPress={() => this.setState({currentScreen: currentScreen.account})}>
+              <Text>Accounts</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{flex: 1, alignItems: 'center'}}
+              onPress={() => this.setState({currentScreen: currentScreen.category})}>
+              <Text>Categories</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </>
     )
   }
@@ -120,25 +130,12 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: "bold"
-  },
-  viewPager: {
     flex: 1
-  },
-  pageStyle: {
-    alignItems: 'center',
-    padding: 20
   },
   header: {
     color: '#f6fafd',
     fontSize: 24,
-    padding: 15,
+    padding: 20,
     textAlign: 'left',
     backgroundColor: '#4a6c8c'
   },
@@ -146,7 +143,18 @@ const styles = StyleSheet.create({
     color: '#4a6c8c',
     fontSize: 24,
     padding: 15,
-    textAlign: 'left',
-    backgroundColor: '#c9dbec'
+    backgroundColor: '#c9dbec',
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
+
+const headerTitle = {
+  ledger: 'Expense',
+  account: 'Account',
+  category: 'Dev',
+  insertLedger: 'Add Expense',
+  detailLedger: 'Detail',
+  insertAccount: 'Add Account',
+  detailAccount: 'Detail'
+}
