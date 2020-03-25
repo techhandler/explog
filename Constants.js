@@ -13,7 +13,7 @@ const Color = {
   pink: '#ed83fd',
   magenta: '#e3538c',
   white: '#ffffff',
-  gray: '#dddddd',
+  gray: '#eeeeee',
   silver: '#888888',
   black: '#000000'
 }

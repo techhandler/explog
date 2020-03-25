@@ -8,15 +8,24 @@ import { fetchAllLedger } from "../db"
 const styles = StyleSheet.create({
   view: {flex: 1},
   panel: {
-    flex: 1
+    flex: 1,
+    // padding:5,
+    backgroundColor: Color.white
   },
   item: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 25,
-    paddingRight: 25,
-    fontSize: 16,
-    flexDirection: 'row'
+    paddingTop: 2,
+    paddingBottom: 2,
+    // paddingLeft: 25,
+    // paddingRight: 25,
+    // fontSize: 16,
+    flexDirection: 'row',
+    backgroundColor: Color.white,
+    // borderLeftWidth : 1,
+    borderTopWidth: 1,
+    // borderBottomWidth : 1,
+    // borderRightWidth : 1,
+    borderColor: '#c9dbec'
+    // borderRadius: 20,
   },
   title: {
     flex: 1
@@ -40,17 +49,18 @@ class Ledger extends Component {
 
           <FlatList
             data={this.state.listData}
-            renderItem={({item}) => (
+            renderItem={({item,index}) => (
               <View><Item
                 id={item.ledgerId}
                 data={item}
+                index={index}
                 onPress={() => this.props.setGlobalState({
                   currentScreen: currentScreen.detailLedger,
                   stack: [this.props.state.currentScreen, ...this.props.state.stack],
                   childData: {ledger: item}
                 })}
               />
-                <View style={{height: 1, backgroundColor: Color.gray}}/>
+                <View style={{height: 0, backgroundColor: Color.white}}/>
               </View>
             )}
             keyExtractor={item => item.ledgerId + ''}
@@ -75,19 +85,31 @@ class Ledger extends Component {
 
 export default Ledger
 
-function Item({id, onPress, data: {ledgerName, ledgerAmount, ledgerDate}}) {
+function Item({id, onPress, data: {ledgerName, ledgerAmount, ledgerDate}, index}) {
   ledgerDate = new Date(ledgerDate)
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.item]}>
-
-      <View style={{flex: 2}}>
-        <Text style={{fontSize: 20}}>{ledgerName}</Text>
-        <Text style={{fontSize: 12, color:Color.silver}}>{ledgerDate.getDate()}-{monthNames[ledgerDate.getMonth()]}</Text>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 18, paddingBottom: 18}}>
+        <Text style={{fontSize: 26, color: '#4a6c8c'}}>{ledgerAmount}</Text>
       </View>
-      <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
-        <Text style={{fontSize: 20, color:Color.red}}>₹ {ledgerAmount}</Text>
+      <View style={{width: 1, backgroundColor: '#c9dbec', height: '100%'}}>
+        {index !==0 && <View style={{
+          backgroundColor: '#c9dbec',
+          width: 18,
+          height: 18,
+          borderRadius: 26,
+          position:'absolute',
+          top:-10,
+          left:-9,
+          borderWidth: 3,
+          borderColor: '#4a6c8c'
+        }}/>}
+      </View>
+      <View style={{flex: 3, paddingTop: 18, paddingBottom: 18, paddingLeft: 25}}>
+        <Text style={{fontSize: 26, color: '#4a6c8c'}}>{ledgerName}</Text>
+        <Text style={{fontSize: 16, color: '#4a6c8c'}}>{ledgerDate.getDate()}-{monthNames[ledgerDate.getMonth()]}</Text>
       </View>
     </TouchableOpacity>
   )

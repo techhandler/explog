@@ -56,7 +56,7 @@ export default class App extends Component {
             {this.state.currentScreen === currentScreen.home &&
             <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
-            {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail/>}
+            {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail insert={true}/>}
 
             {this.state.currentScreen === currentScreen.detailLedger &&
             <LedgerDetail childData={this.state.childData}/>}
@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     padding: 20
   },
   header: {
-    backgroundColor: Color.blue,
+    color: '#f6fafd',
     fontSize: 24,
     padding: 15,
-    textAlign: 'center',
-    color: Color.white
+    textAlign: 'left',
+    backgroundColor: '#4a6c8c'
   }
 })
