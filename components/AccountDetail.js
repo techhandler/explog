@@ -11,6 +11,8 @@ class AccountDetail extends Component {
     return (
         <View style={{backgroundColor:'red', flex:1}}>
           <Text>{JSON.stringify(this.props.childData)}</Text>
+          <Text>{this.props.childData.accountName}</Text>
+          <Text>{this.props.childData.accountAmount}</Text>
         </View>
     )
   }

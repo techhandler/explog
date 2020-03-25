@@ -9,8 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 export default class App extends Component {
   state = {
-    stack: [currentScreen.account],
-    currentScreen: currentScreen.insertAccount,
+    stack: [],
+    currentScreen: currentScreen.home,
     childData: {}
   }
 
@@ -49,11 +49,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <ViewPagerAndroid style={styles.viewPager} initialPage={1}>
+      <ViewPagerAndroid style={styles.viewPager} initialPage={0}>
         <View key="1">
           <Text style={styles.header}>CHATS</Text>
           <View style={{flex: 1}}>
-            {this.state.currentScreen === currentScreen.ledger &&
+            {this.state.currentScreen === currentScreen.home &&
             <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
             {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail/>}
@@ -64,8 +64,8 @@ export default class App extends Component {
         </View>
         <View key="2">
           <Text style={styles.header}>ACC</Text>
-          {this.state.currentScreen === currentScreen.account &&
-          <Accounts setGlobalState={this.setGlobalState} state={this.state} />}
+          {this.state.currentScreen === currentScreen.home &&
+          <Accounts setGlobalState={this.setGlobalState} state={this.state}/>}
 
           {this.state.currentScreen === currentScreen.insertAccount && <AccountDetail/>}
 
@@ -91,9 +91,9 @@ export default class App extends Component {
                 {lI: "4", lN: "L-1", lA: 100, lC: "1", lNo: "Testing 1", lD: 1584884455243, aI: "2"}
               ]))
               await AsyncStorage.setItem('account', JSON.stringify([
-                {aI: '1', aN: 'A-1', aA: 20000, d: false},
-                {aI: '2', aN: 'A-2', aA: 40000, d: true},
-                {aI: '3', aN: 'A-3', aA: 60000, d: false}
+                {aI: '1', aN: 'A-1', aA: 20000, d: false, lg: [{add: 5000}]},
+                {aI: '2', aN: 'A-2', aA: 40000, d: true, lg: [{add: 10000}]},
+                {aI: '3', aN: 'A-3', aA: 60000, d: false, lg: [{add: 30000}]}
               ]))
               await AsyncStorage.setItem('category', JSON.stringify([
                 {cI: '1', cN: 'Other'},

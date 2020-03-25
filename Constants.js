@@ -1,4 +1,4 @@
-export { Color, currentScreen, style, dataBase }
+export { Color, currentScreen, style, dataBase, monthNames }
 
 const Color = {
   violet: '#957bfb',
@@ -25,13 +25,14 @@ const dataBase = {
 }
 
 const currentScreen = {
-  ledger: 'ledger',
+  home:'home',
   insertLedger: 'insertLedger',
   detailLedger: 'detailLedger',
-  account:'account',
   insertAccount: 'insertAccount',
   detailAccount: 'detailAccount'
 }
+
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const style = {
   paper: {

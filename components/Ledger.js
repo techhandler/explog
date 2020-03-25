@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, FlatList, TouchableOpacity } from "react-native"
-import { Color, currentScreen, style } from '../Constants'
+import { Color, currentScreen, monthNames } from '../Constants'
 import FabButton from './FabButton'
 import { fetchAllLedger } from "../db"
 
@@ -11,8 +11,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   item: {
-    padding: 30,
-    fontSize: 16
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
+    fontSize: 16,
+    flexDirection: 'row'
   },
   title: {
     flex: 1
@@ -39,19 +43,12 @@ class Ledger extends Component {
             renderItem={({item}) => (
               <View><Item
                 id={item.ledgerId}
-                leftUpTitle={item.ledgerName}
-                leftDownTitle={item.ledgerCategory}
-                rightUpTitle={item.ledgerAmount}
-                rightDownTitle={new Date(item.ledgerDate).toDateString()}
-
+                data={item}
                 onPress={() => this.props.setGlobalState({
                   currentScreen: currentScreen.detailLedger,
                   stack: [this.props.state.currentScreen, ...this.props.state.stack],
-                  childData: {ledger : item}
+                  childData: {ledger: item}
                 })}
-
-                // selected={!!selected.get(item.id)}
-                // onSelect={onSelect}
               />
                 <View style={{height: 1, backgroundColor: Color.gray}}/>
               </View>
@@ -78,19 +75,20 @@ class Ledger extends Component {
 
 export default Ledger
 
-function Item({id, leftUpTitle, rightDownTitle, rightUpTitle, leftDownTitle, onPress, onSelect}) {
+function Item({id, onPress, data: {ledgerName, ledgerAmount, ledgerDate}}) {
+  ledgerDate = new Date(ledgerDate)
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[
-        styles.item
-        // {backgroundColor: selected ? '#6e3b6e' : '#f9c2ff'}
-      ]}
-    >
-      <Text>{leftUpTitle}</Text>
-      <Text>{leftDownTitle}</Text>
-      <Text>{rightUpTitle}</Text>
-      <Text>{rightDownTitle}</Text>
+      style={[styles.item]}>
+
+      <View style={{flex: 2}}>
+        <Text style={{fontSize: 20}}>{ledgerName}</Text>
+        <Text style={{fontSize: 12, color:Color.silver}}>{ledgerDate.getDate()}-{monthNames[ledgerDate.getMonth()]}</Text>
+      </View>
+      <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center'}}>
+        <Text style={{fontSize: 20, color:Color.red}}>₹ {ledgerAmount}</Text>
+      </View>
     </TouchableOpacity>
   )
 }
