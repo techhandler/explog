@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 export default class App extends Component {
   state = {
     stack: [],
-    currentScreen: currentScreen.ledger,
+    currentScreen: currentScreen.account,
     childData: {}
   }
 

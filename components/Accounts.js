@@ -11,12 +11,30 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center'
   },
-  item: {
-    padding: 30,
-    fontSize: 16
-  },
   title: {
     flex: 1
+  },
+  card: {
+    width: '80%',
+    height: 150,
+    marginTop: 30,
+    marginBottom: 10,
+    borderRadius: 10
+  },
+  cardHeader: {
+    height: '65%',
+    fontSize: 32,
+    backgroundColor: '#c9dbec',
+    padding: 15,
+    color: '#4a6c8c'
+  },
+  cardAmount: {
+    fontSize: 24,
+    textAlign: 'right',
+    padding: 15,
+    borderColor: '#c9dbec',
+    borderWidth: 1,
+    color: '#4a6c8c'
   }
 })
 
@@ -34,15 +52,15 @@ class Accounts extends Component {
       <View style={styles.view}>
         <View style={styles.panel}>
 
-          {this.state.accountsData.map(a => <TouchableOpacity style={{
-            borderWidth: 1, width: '80%', height: 150
-          }} key={a.accountId} onPress={() => this.props.setGlobalState({
-            currentScreen: currentScreen.detailAccount,
-            stack: [this.props.state.currentScreen, ...this.props.state.stack],
-            childData: {account : a}
-          })}>
-            <Text>{a.accountName}</Text>
-            <Text>{a.accountAmount}</Text>
+          {this.state.accountsData.map(a => <TouchableOpacity
+            style={styles.card} key={a.accountId}
+            onPress={() => this.props.setGlobalState({
+              currentScreen: currentScreen.detailAccount,
+              stack: [this.props.state.currentScreen, ...this.props.state.stack],
+              childData: {account: a}
+            })}>
+            <Text style={styles.cardHeader}>{a.accountName}</Text>
+            <Text style={styles.cardAmount}>{a.accountAmount}</Text>
           </TouchableOpacity>)}
 
         </View>
@@ -61,20 +79,3 @@ class Accounts extends Component {
 }
 
 export default Accounts
-
-function Item({id, leftUpTitle, rightDownTitle, rightUpTitle, leftDownTitle, selected, onSelect}) {
-  return (
-    <TouchableOpacity
-      onPress={() => console.log(id)}
-      style={[
-        styles.item
-        // {backgroundColor: selected ? '#6e3b6e' : '#f9c2ff'}
-      ]}
-    >
-      <Text>{leftUpTitle}</Text>
-      <Text>{leftDownTitle}</Text>
-      <Text>{rightUpTitle}</Text>
-      <Text>{rightDownTitle}</Text>
-    </TouchableOpacity>
-  )
-}
