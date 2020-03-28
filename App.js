@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity } from "react-native"
+import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
 import { Ledger, LedgerDetail, Accounts, AccountDetail } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
@@ -13,6 +13,8 @@ export default class App extends Component {
     childData: {}
   }
 
+  doubleExit = 0
+
   setGlobalState = (obj) => {
     this.setState({...obj})
   }
@@ -22,14 +24,13 @@ export default class App extends Component {
       let [currentScreen, ...rest] = this.state.stack
       this.setGlobalState({currentScreen, stack: [...rest]})
     } else {
-      Alert.alert("Exit App", "Are you sure you want to Exit?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel"
-        },
-        {text: "Exit", onPress: () => BackHandler.exitApp()}
-      ])
+      this.doubleExit += 1
+      if (this.doubleExit === 1) {
+        ToastAndroid.show('Press Back again to exit', ToastAndroid.SHORT)
+        setTimeout(() => this.doubleExit = 0, 2200)
+      } else if (this.doubleExit > 1) {
+        BackHandler.exitApp()
+      }
     }
     return true
   }
