@@ -110,7 +110,6 @@ class LedgerDetail extends Component {
         <FabButton
           text="*"
           onPress={() => this.handleOnSave()}
-          // style={{backgroundColor: Color.blue}}
         />
       </View>
     )

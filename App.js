@@ -51,7 +51,7 @@ export default class App extends Component {
     return (
       <>
         <View style={styles.container}>
-          <Text style={styles.header}>{headerTitle[this.state.currentScreen]}</Text>
+          <Text style={styles.header}>{headerObject[this.state.currentScreen].title}</Text>
           {this.state.currentScreen === currentScreen.ledger &&
           <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
 
@@ -106,23 +106,24 @@ export default class App extends Component {
               }}/>
           </View>
           }
+          {headerObject[this.state.currentScreen].home &&
           <View style={styles.footer}>
             <TouchableOpacity
-              style={{flex: 1, alignItems: 'center'}}
+              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.ledger?{backgroundColor:'#c9dbec'}:null]}
               onPress={() => this.setState({currentScreen: currentScreen.ledger})}>
               <Text>Expense</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{flex: 1, alignItems: 'center'}}
+              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.account?{backgroundColor:'#c9dbec'}:null]}
               onPress={() => this.setState({currentScreen: currentScreen.account})}>
               <Text>Accounts</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{flex: 1, alignItems: 'center'}}
+              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.category?{backgroundColor:'#c9dbec'}:null]}
               onPress={() => this.setState({currentScreen: currentScreen.category})}>
               <Text>Categories</Text>
             </TouchableOpacity>
-          </View>
+          </View>}
         </View>
       </>
     )
@@ -141,21 +142,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#4a6c8c'
   },
   footer: {
-    color: '#4a6c8c',
-    fontSize: 24,
-    padding: 15,
-    backgroundColor: '#c9dbec',
+    backgroundColor: '#dfebf7',
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  footerItems:{
+
   }
 })
 
-const headerTitle = {
-  ledger: 'Expense',
-  account: 'Account',
-  category: 'Dev',
-  insertLedger: 'Add Expense',
-  detailLedger: 'Detail',
-  insertAccount: 'Add Account',
-  detailAccount: 'Detail'
+const headerObject = {
+  ledger: {title: 'Expense', home: true},
+  account: {title: 'Account', home: true},
+  category: {title: 'Dev', home:true},
+  insertLedger: {title: 'Add Expense'},
+  detailLedger: {title: 'Detail'},
+  insertAccount: {title: 'Add Account'},
+  detailAccount: {title: 'Detail'}
 }

@@ -5,7 +5,7 @@ import { Color } from '../Constants'
 const styles = {
   button: {
     position: 'absolute',
-    backgroundColor: Color.blue,
+    backgroundColor: '#4a6c8c',
     width: 60,
     height: 60,
     textAlign: 'center',
@@ -16,7 +16,7 @@ const styles = {
     borderRadius: 50,
     borderBottomWidth: 2,
     borderRightWidth: 1,
-    borderColor: Color.gray
+    borderColor: '#c9dbec'
   },
   buttonText: {
     color: Color.white
