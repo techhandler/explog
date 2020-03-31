@@ -47,6 +47,7 @@ export const fetchAllAccounts = async () => {
       accountId: a[fields.accountId],
       accountName: a[fields.accountName],
       accountAmount: a[fields.accountAmount],
+      accountLogs:a[fields.accountLogs],
       defaultAccount: a[fields.accountDefault]
     }))
     return {success: true, result}
@@ -80,6 +81,7 @@ const fields = {
   accountName: 'aN',
   accountAmount: 'aA',
   accountDefault: 'd',
+  accountLogs:'lg',
   categoryId: 'cI',
   categoryName: 'cN'
 }
