@@ -7,10 +7,6 @@ import { fetchAllAccounts } from "../db"
 
 const styles = StyleSheet.create({
   view: {flex: 1},
-  panel: {
-    flex: 1,
-    alignItems: 'center'
-  },
   title: {
     flex: 1
   },
@@ -50,20 +46,25 @@ class Accounts extends Component {
   render() {
     return (
       <View style={styles.view}>
-        <View style={styles.panel}>
-
-          {this.state.accountsData.map(a => <TouchableOpacity
-            style={styles.card} key={a.accountId}
-            onPress={() => this.props.setGlobalState({
-              currentScreen: currentScreen.detailAccount,
-              stack: [this.props.state.currentScreen, ...this.props.state.stack],
-              childData: {account: a}
-            })}>
-            <Text style={styles.cardHeader}>{a.accountName}</Text>
-            <Text style={styles.cardAmount}>{a.accountAmount}</Text>
-          </TouchableOpacity>)}
-
-        </View>
+        <FlatList
+          style={styles.view}
+          data={this.state.accountsData}
+          renderItem={({item}) => (
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styles.card} key={item.accountId}
+                onPress={() => this.props.setGlobalState({
+                  currentScreen: currentScreen.detailAccount,
+                  stack: [this.props.state.currentScreen, ...this.props.state.stack],
+                  childData: {account: item}
+                })}>
+                <Text style={styles.cardHeader}>{item.accountName}</Text>
+                <Text style={styles.cardAmount}>{item.accountAmount}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={item => item.accountId}
+        />
         <FabButton
           text={'+'}
           onPress={() => this.props.setGlobalState({
