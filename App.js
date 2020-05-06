@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
-import { Ledger, LedgerDetail, Accounts, AccountDetail, Category } from "./components"
+import { Ledger, LedgerDetail, Accounts, AccountDetail, Category, Footer } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -17,6 +17,23 @@ export default class App extends Component {
 
   setGlobalState = (obj) => {
     this.setState({...obj})
+  }
+
+  renderScreen = () => {
+    switch (this.state.currentScreen) {
+      case currentScreen.ledger:
+        return <Ledger setGlobalState={this.setGlobalState} state={this.state}/>
+      case currentScreen.insertLedger:
+        return <LedgerDetail insert={true}/>
+      case currentScreen.detailLedger:
+        return <LedgerDetail childData={this.state.childData}/>
+      case currentScreen.account:
+        return <Accounts setGlobalState={this.setGlobalState} state={this.state}/>
+      case currentScreen.insertAccount:
+        return <AccountDetail/>
+      case currentScreen.detailAccount:
+        return <AccountDetail childData={this.state.childData}/>
+    }
   }
 
   backAction = () => {
@@ -52,23 +69,10 @@ export default class App extends Component {
       <>
         <View style={styles.container}>
           <Text style={styles.header}>{headerObject[this.state.currentScreen].title}</Text>
-          {this.state.currentScreen === currentScreen.ledger &&
-          <Ledger setGlobalState={this.setGlobalState} state={this.state}/>}
+          {this.renderScreen()}
 
-          {this.state.currentScreen === currentScreen.insertLedger && <LedgerDetail insert={true}/>}
-
-          {this.state.currentScreen === currentScreen.detailLedger &&
-          <LedgerDetail childData={this.state.childData}/>}
-          {this.state.currentScreen === currentScreen.account &&
-          <Accounts setGlobalState={this.setGlobalState} state={this.state}/>}
-
-          {this.state.currentScreen === currentScreen.insertAccount && <AccountDetail/>}
-
-          {this.state.currentScreen === currentScreen.detailAccount &&
-          <AccountDetail childData={this.state.childData}/>}
-
-          {((this.state.currentScreen === currentScreen.category)||(this.state.currentScreen === currentScreen.insertCategory)) &&
-          <View style={{flex:1}}>
+          {((this.state.currentScreen === currentScreen.category) || (this.state.currentScreen === currentScreen.insertCategory)) &&
+          <View style={{flex: 1}}>
             {false && <View>
               <Text>Dev Page</Text>
               {/*<Button*/}
@@ -110,25 +114,10 @@ export default class App extends Component {
             <Category setGlobalState={this.setGlobalState} state={this.state}/>
           </View>
           }
-
-          {headerObject[this.state.currentScreen].home &&
-          <View style={styles.footer}>
-            <TouchableOpacity
-              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.ledger?{backgroundColor:'#c9dbec'}:null]}
-              onPress={() => this.setState({currentScreen: currentScreen.ledger})}>
-              <Text>Expense</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.account?{backgroundColor:'#c9dbec'}:null]}
-              onPress={() => this.setState({currentScreen: currentScreen.account})}>
-              <Text>Accounts</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{flex: 1, alignItems: 'center', padding:15},this.state.currentScreen===currentScreen.category?{backgroundColor:'#c9dbec'}:null]}
-              onPress={() => this.setState({currentScreen: currentScreen.category})}>
-              <Text>Categories</Text>
-            </TouchableOpacity>
-          </View>}
+          {
+            headerObject[this.state.currentScreen].home &&
+            <Footer currentScreen={this.state.currentScreen} setGlobalState={this.setGlobalState}/>
+          }
         </View>
       </>
     )
@@ -151,18 +140,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  footerItems:{
-
-  }
+  footerItems: {}
 })
 
 const headerObject = {
   ledger: {title: 'Expense', home: true},
   account: {title: 'Account', home: true},
-  category: {title: 'Dev', home:true},
+  category: {title: 'Dev', home: true},
   insertLedger: {title: 'Add Expense'},
   detailLedger: {title: 'Detail'},
   insertAccount: {title: 'Add Account'},
   detailAccount: {title: 'Detail'},
-  insertCategory: {title: 'Add Category'},
+  insertCategory: {title: 'Add Category'}
 }
