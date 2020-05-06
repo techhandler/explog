@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid } from "react-native"
-import FabButton from './FabButton'
-import { Color, style } from '../Constants'
-import { insertLedger, fetchAllAccounts, fetchAllCategories } from '../db'
+import FabButton from '../FabButton'
+import { Color, style } from '../../Constants'
+import { insertLedger, fetchAllAccounts, fetchAllCategories } from '../../db'
 
 let initialState = {
   ledgerName: "",

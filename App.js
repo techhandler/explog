@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
-import { Ledger, LedgerDetail, Accounts, AccountDetail, Category, Footer } from "./components"
+import { Ledger, LedgerDetail, Accounts, AccountDetail, Category, Footer, LedgerInsert } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 export default class App extends Component {
   state = {
     stack: [],
-    currentScreen: currentScreen.category,
+    currentScreen: currentScreen.ledger,
     childData: {}
   }
 
@@ -24,7 +24,7 @@ export default class App extends Component {
       case currentScreen.ledger:
         return <Ledger setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertLedger:
-        return <LedgerDetail insert={true}/>
+        return <LedgerInsert insert={true}/>
       case currentScreen.detailLedger:
         return <LedgerDetail childData={this.state.childData}/>
       case currentScreen.account:
