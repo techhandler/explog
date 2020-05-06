@@ -2,5 +2,6 @@ import Ledger from './Ledger'
 import LedgerDetail from './LedgerDetail'
 import Accounts from './Accounts'
 import AccountDetail from "./AccountDetail"
+import Category from "./Category"
 
-export { Accounts, Ledger, LedgerDetail, AccountDetail }
+export { Accounts, Ledger, LedgerDetail, AccountDetail, Category }

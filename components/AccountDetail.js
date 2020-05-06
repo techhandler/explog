@@ -16,7 +16,6 @@ class AccountDetail extends Component {
   }
 
   render() {
-    console.log("sldkjfaskldjfklsdf", JSON.stringify(this.props.childData))
     return (
       <View style={{flex: 1, padding: 10}}>
         <View style={{flex: 3, backgroundColor: '#c9dbec', justifyContent: 'flex-end'}}>
@@ -31,19 +30,25 @@ class AccountDetail extends Component {
           >{this.state.accountAmount}</Text>
         </View>
         <View style={{flex: 6}}>
-          <Text style={{paddingTop: 15, paddingBottom: 6, fontSize: 18, textAlign: 'center'}}>History</Text>
-          <View style={{flexDirection: 'row', padding: 5, borderBottomWidth: 2, borderColor: 'grey'}}>
-            <Text style={{flex: 4}}>Date</Text>
-            <Text style={{flex: 1}}>Credit</Text>
-            <Text style={{flex: 1}}>Withdraw</Text>
+          <Text style={{
+            paddingTop: 35,
+            paddingBottom: 6,
+            fontSize: 20,
+            textAlign: 'center',
+            color: '#4a6c8c'
+          }}>History</Text>
+          <View style={{flexDirection: 'row', padding: 5, borderBottomWidth: 1, borderColor: 'grey'}}>
+            <Text style={styles.dateColumn}>Date</Text>
+            <Text style={styles.creditColumn}>Credit</Text>
+            <Text style={styles.withdrawColumn}>Withdraw</Text>
           </View>
           {
             this.state.accountLogs && this.state.accountLogs.map((a, i) => {
               return (
-                <View key={i} style={{flexDirection: 'row', padding: 7, borderBottomWidth: 1, borderColor: 'grey'}}>
-                  <Text style={{flex: 4}}>{new Date(a.d).toDateString()}</Text>
-                  <Text style={{flex: 1}}>{a.add || ""}</Text>
-                  <Text style={{flex: 1, textAlign: 'right'}}>{a.sub || ""}</Text>
+                <View key={i} style={{flexDirection: 'row', padding: 7, borderBottomWidth: 1, borderColor: '#c9dbec'}}>
+                  <Text style={styles.dateColumn}>{new Date(a.d).toDateString()}</Text>
+                  <Text style={styles.creditColumn}>{a.add || ""}</Text>
+                  <Text style={styles.withdrawColumn}>{a.sub || ""}</Text>
                 </View>)
             })
           }
@@ -56,15 +61,9 @@ class AccountDetail extends Component {
 export default AccountDetail
 
 const styles = {
-  accountName: {
-    fontSize: 32,
-    padding: 15,
-    color: '#4a6c8c'
-  },
-  accountAmount: {
-    fontSize: 24,
-    textAlign: 'right',
-    color: '#4a6c8c',
-    paddingRight: 15
-  }
+  accountName: {fontSize: 32, padding: 15, color: '#4a6c8c'},
+  accountAmount: {fontSize: 24, textAlign: 'right', color: '#4a6c8c', paddingRight: 15},
+  dateColumn: {flex: 3, color: '#4a6c8c', fontSize: 16},
+  creditColumn: {flex: 1, color: '#4a6c8c', fontSize: 16},
+  withdrawColumn: {flex: 1, textAlign: 'right', color: '#4a6c8c', fontSize: 16}
 }

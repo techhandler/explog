@@ -22,6 +22,20 @@ export const insertLedger = async ({...obj}) => {
   }
 }
 
+export const fetchAllCategory = async () => {
+  try {
+    // let result = await db.table(dataBase.ledger).find()
+    let result = [{cI: '1', cN: 'Other'}, {cI: '2', cN: 'C-2'}, {cI: '3', cN: 'C-3'}];
+    result = result.map(a => ({
+      categoryId: a[fields.categoryId],
+      categoryName: a[fields.categoryName]
+    }))
+    return {success: true, result}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
+
 export const fetchAllLedger = async () => {
   try {
     let result = await db.table(dataBase.ledger).find()

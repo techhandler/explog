@@ -31,7 +31,8 @@ const currentScreen = {
   insertLedger: 'insertLedger',
   detailLedger: 'detailLedger',
   insertAccount: 'insertAccount',
-  detailAccount: 'detailAccount'
+  detailAccount: 'detailAccount',
+  insertCategory: 'insertCategory'
 }
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

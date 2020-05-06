@@ -108,7 +108,9 @@ class LedgerDetail extends Component {
         </View>
 
         <FabButton
-          text="*"
+          text="&#9998;"
+          textStyle={{fontSize:30}}
+          style={{}}
           onPress={() => this.handleOnSave()}
         />
       </View>
