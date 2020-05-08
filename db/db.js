@@ -28,10 +28,13 @@ import { dataBase } from '../Constants'
 
 export const initiateDb = async () => {
   try {
-    await query(`CREATE TABLE IF NOT EXISTS category(c_id INTEGER PRIMARY KEY AUTOINCREMENT, c_name VARCHAR(40), is_def INT(4))`)
-    await query(`CREATE TABLE IF NOT EXISTS account(a_id INTEGER PRIMARY KEY AUTOINCREMENT, a_name VARCHAR(40), a_amount INTEGER, is_default INT(4))`)
+    // await query('DROP TABLE IF EXISTS category');
+    await query(`CREATE TABLE IF NOT EXISTS category(c_id INTEGER PRIMARY KEY AUTOINCREMENT, c_name VARCHAR(40), is_default INT(4) DEFAULT 0)`)
+    await query(`CREATE TABLE IF NOT EXISTS account(a_id INTEGER PRIMARY KEY AUTOINCREMENT, a_name VARCHAR(40), a_amount INTEGER, is_default INT(4) DEFAULT 0)`)
     await query('CREATE TABLE IF NOT EXISTS ledger(l_id INTEGER PRIMARY KEY AUTOINCREMENT, l_name VARCHAR(60), l_amount INTEGER, l_description VARCHAR(160), l_date VARCHAR(14), c_id INTEGER, a_id INTEGER, FOREIGN KEY (c_id) REFERENCES category (c_id), FOREIGN KEY (a_id) REFERENCES account (a_id))')
     await query('CREATE TABLE IF NOT EXISTS accountlogs(log_id INTEGER PRIMARY KEY AUTOINCREMENT, cr_amount INTEGER, dr_amount INTEGER, log_date VARCHAR(14), a_id INTEGER, FOREIGN KEY (a_id) REFERENCES account (a_id))')
+    let tables = await query('SELECT name FROM sqlite_master WHERE type=\'table\' ORDER BY name;')
+    console.log("tables", tables.raw)
   } catch (err) {
     console.log("cannot delete", err)
   }
@@ -78,10 +81,10 @@ export default class db {
   }
 }
 
-export const query = function (sqlQuery) {
+export const query = function (sqlQuery, params = []) {
   return new Promise((resolve, reject) => {
     db1.transaction(trx => {
-      trx.executeSql(sqlQuery, [], function (tx, response = {}) {
+      trx.executeSql(sqlQuery, params, function (tx, response = {}) {
         let res = {...response}
         if (response.rows && response.rows.raw)
           res.raw = JSON.parse(JSON.stringify(response.rows.raw()))

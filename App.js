@@ -75,12 +75,12 @@ export default class App extends Component {
           <View style={{flex: 1}}>
             { <View>
               <Text>Dev Page</Text>
-              {/*<Button*/}
-              {/*title="Remove All"*/}
-              {/*onPress={async () => {*/}
-              {/*await AsyncStorage.removeItem('account')*/}
-              {/*console.log('removed all')*/}
-              {/*}}/>*/}
+              <Button
+              title="Remove All"
+              onPress={async () => {
+              await AsyncStorage.removeItem('category')
+              console.log('removed all')
+              }}/>
               <View style={{height: 20}}/>
               {/*<Button*/}
               {/*title="Seed All Data"*/}
@@ -109,6 +109,7 @@ export default class App extends Component {
                 onPress={async () => {
                   console.log('ledger>>', (await AsyncStorage.getItem('ledger')))
                   console.log('account>>', JSON.parse(await AsyncStorage.getItem('account')))
+                  console.log('category>>', JSON.parse(await AsyncStorage.getItem('category')))
                 }}/>
             </View>}
             <Category setGlobalState={this.setGlobalState} state={this.state}/>

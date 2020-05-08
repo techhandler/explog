@@ -3,7 +3,7 @@ import LedgerDetail from './Ledger/LedgerDetail'
 import LedgerInsert from './Ledger/LedgerInsert'
 import Accounts from './Accounts'
 import AccountDetail from "./AccountDetail"
-import Category from "./Category"
+import Category from "./category/Category"
 import Footer from "./Footer"
 
 export { Accounts, Ledger, LedgerDetail, LedgerInsert, AccountDetail, Category, Footer }

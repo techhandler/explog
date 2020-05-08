@@ -1,7 +1,7 @@
 import db, { initiateDb, query } from './db'
 import { dataBase } from '../Constants'
 
-export { initiateDb }
+export { initiateDb , query}
 
 export const insertLedger = async ({...obj}) => {
   let newObj = {
@@ -25,7 +25,7 @@ export const insertLedger = async ({...obj}) => {
 export const fetchAllCategory = async () => {
   try {
     // let result = await db.table(dataBase.ledger).find()
-    let result = [{cI: '1', cN: 'Other'}, {cI: '2', cN: 'C-2'}, {cI: '3', cN: 'C-3'}];
+    let result = [];
     result = result.map(a => ({
       categoryId: a[fields.categoryId],
       categoryName: a[fields.categoryName]
