@@ -1,4 +1,4 @@
-import db, { initiateDb } from './db'
+import db, { initiateDb, query } from './db'
 import { dataBase } from '../Constants'
 
 export { initiateDb }

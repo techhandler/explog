@@ -73,7 +73,7 @@ export default class App extends Component {
 
           {((this.state.currentScreen === currentScreen.category) || (this.state.currentScreen === currentScreen.insertCategory)) &&
           <View style={{flex: 1}}>
-            {false && <View>
+            { <View>
               <Text>Dev Page</Text>
               {/*<Button*/}
               {/*title="Remove All"*/}
