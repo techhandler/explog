@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
-import { Ledger, LedgerDetail, Accounts, AccountDetail, Category, Footer, LedgerInsert } from "./components"
+import { Ledger, LedgerDetail, Accounts, AccountDetail, Category, Footer, LedgerInsert, AccountInsert } from "./components"
 import { Color, currentScreen } from "./Constants"
 import { initiateDb } from './db'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -30,10 +30,15 @@ export default class App extends Component {
       case currentScreen.account:
         return <Accounts setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertAccount:
-        return <AccountDetail/>
+        return <AccountInsert/>
       case currentScreen.detailAccount:
         return <AccountDetail childData={this.state.childData}/>
     }
+  }
+
+  goBack = ()=>{
+    let [currentScreen, ...rest] = this.state.stack
+    this.setGlobalState({currentScreen, stack: [...rest]})
   }
 
   backAction = () => {
@@ -112,7 +117,7 @@ export default class App extends Component {
                   console.log('category>>', JSON.parse(await AsyncStorage.getItem('category')))
                 }}/>
             </View>}
-            <Category setGlobalState={this.setGlobalState} state={this.state}/>
+            <Category setGlobalState={this.setGlobalState} state={this.state} goBack={this.goBack}/>
           </View>
           }
           {

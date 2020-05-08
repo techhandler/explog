@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid, TouchableOpacity } from "react-native"
-import { currentScreen, style } from "../Constants"
+import { currentScreen, style } from "../../Constants"
 
 class AccountDetail extends Component {
 

@@ -85,8 +85,7 @@ export default Category = (props) => {
             let {success} = await insertCategory(newCategory)
             if (success) {
               ToastAndroid.show('Expense Saved', ToastAndroid.SHORT)
-              let [currentScreen, ...rest] = props.state.stack
-              props.setGlobalState({currentScreen, stack: [...rest]})
+              props.goBack();
             }
           }
           }
