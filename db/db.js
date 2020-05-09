@@ -32,10 +32,10 @@ export const initiateDb = async () => {
     // await query('DROP TABLE IF EXISTS accountlogs');
     // await query('DROP TABLE IF EXISTS category');
     // await query('DROP TABLE IF EXISTS ledger');
-    await query(`CREATE TABLE IF NOT EXISTS category(c_id INTEGER PRIMARY KEY AUTOINCREMENT, c_name VARCHAR(40), is_default INT(4) DEFAULT 0)`)
-    await query(`CREATE TABLE IF NOT EXISTS account(a_id INTEGER PRIMARY KEY AUTOINCREMENT, a_name VARCHAR(40), a_amount INTEGER, is_default INT(4) DEFAULT 0)`)
-    await query('CREATE TABLE IF NOT EXISTS ledger(l_id INTEGER PRIMARY KEY AUTOINCREMENT, l_name VARCHAR(60), l_amount INTEGER, l_description VARCHAR(160), l_date VARCHAR(14), c_id INTEGER, a_id INTEGER, FOREIGN KEY (c_id) REFERENCES category (c_id), FOREIGN KEY (a_id) REFERENCES account (a_id))')
-    await query('CREATE TABLE IF NOT EXISTS accountlogs(log_id INTEGER PRIMARY KEY AUTOINCREMENT, cr_amount INTEGER, dr_amount INTEGER, log_date VARCHAR(14), a_id INTEGER, FOREIGN KEY (a_id) REFERENCES account (a_id))')
+    await query(`CREATE TABLE IF NOT EXISTS category(c_id INTEGER PRIMARY KEY AUTOINCREMENT, c_name VARCHAR(40) NOT NULL, is_default INT(4) DEFAULT 0)`)
+    await query(`CREATE TABLE IF NOT EXISTS account(a_id INTEGER PRIMARY KEY AUTOINCREMENT, a_name VARCHAR(40) NOT NULL, a_amount INTEGER NOT NULL, is_default INT(4) DEFAULT 0)`)
+    await query('CREATE TABLE IF NOT EXISTS ledger(l_id INTEGER PRIMARY KEY AUTOINCREMENT, l_name VARCHAR(60) NOT NULL, l_amount INTEGER NOT NULL, l_description VARCHAR(160), l_date DATETIME NOT NULL DEFAULT (datetime(current_timestamp,\'localtime\')), c_id INTEGER, a_id INTEGER, FOREIGN KEY (c_id) REFERENCES category (c_id), FOREIGN KEY (a_id) REFERENCES account (a_id))')
+    await query('CREATE TABLE IF NOT EXISTS accountlogs(log_id INTEGER PRIMARY KEY AUTOINCREMENT, cr_amount INTEGER, dr_amount INTEGER, log_date DATETIME DEFAULT (datetime(current_timestamp,\'localtime\')), log_comments VARCHAR(100), a_id INTEGER NOT NULL, FOREIGN KEY (a_id) REFERENCES account (a_id))')
     let tables = await query('SELECT name FROM sqlite_master WHERE type=\'table\' ORDER BY name;')
     console.log("tables", tables.raw)
   } catch (err) {

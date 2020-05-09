@@ -31,9 +31,15 @@ export default Category = (props) => {
   let [categoryData, setCategoryData] = useState([]);
 
   useEffect(()=>{
-    fetchAllCategory().then(({result=[]})=>{
-      setCategoryData(result)
-    }).catch((err)=>{console.log("Errrrincat",err)})
+    fetchAllCategory().then(({success,result=[]})=>{
+      if(success){
+        setNewCategory('');
+        setCategoryData(result)
+      }
+      else{
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
+      }
+    })
   },[props.state.currentScreen]);
 
     return (
@@ -82,11 +88,15 @@ export default Category = (props) => {
         {props.state.currentScreen === currentScreen.insertCategory && <FabButton
           text='&#10003;'
           onPress={async () => {
-            let {success} = await insertCategory(newCategory)
+            let {success, errorMessage} = await insertCategory(newCategory)
             if (success) {
               ToastAndroid.show('Expense Saved', ToastAndroid.SHORT)
               props.goBack();
             }
+            else if(!success && errorMessage)
+              ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
+            else
+              ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
           }
           }
           textStyle={{fontSize: 35, color: '#4a6c8c'}}

@@ -12,8 +12,12 @@ export const fetchAllCategory = async () => {
 
 export const insertCategory = async (data) => {
   try {
-    let result = await query(`INSERT INTO category(c_name) VALUES ('${data}')`)
-    return {success: true, result}
+    if(data){
+      let result = await query(`INSERT INTO category(c_name) VALUES ('${data}')`)
+      return {success: true, result}
+    }
+    else
+      return {success: false, errorMessage: 'Category Name is mandatory'}
   } catch (error) {
     return {success: false, error}
   }
