@@ -32,7 +32,8 @@ export default class App extends Component {
       case currentScreen.insertAccount:
         return <AccountInsert goBack={this.goBack} />
       case currentScreen.detailAccount:
-        return <AccountDetail childData={this.state.childData}/>
+      case currentScreen.amountTransactionInAccount:
+        return <AccountDetail childData={this.state.childData} setGlobalState={this.setGlobalState} state={this.state}  goBack={this.goBack} />
     }
   }
 
@@ -78,7 +79,7 @@ export default class App extends Component {
 
           {((this.state.currentScreen === currentScreen.category) || (this.state.currentScreen === currentScreen.insertCategory)) &&
           <View style={{flex: 1}}>
-            { <View>
+            { false && <View>
               <Text>Dev Page</Text>
               <Button
               title="Remove All"
@@ -157,5 +158,6 @@ const headerObject = {
   detailLedger: {title: 'Detail'},
   insertAccount: {title: 'Add Account'},
   detailAccount: {title: 'Detail'},
+  amountTransactionInAccount: {title: 'Amount Transaction'},
   insertCategory: {title: 'Add Category'}
 }

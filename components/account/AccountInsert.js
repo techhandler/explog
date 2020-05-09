@@ -10,31 +10,37 @@ const AccountInsert = (props) => {
 
   return (
     <View style={{flex: 1, padding: 10}}>
-      <KeyboardAvoidingView style={{ backgroundColor: '#c9dbec', justifyContent: 'flex-end', height: 600}} behavior={'height'}>
+      <KeyboardAvoidingView style={{ backgroundColor: '#c9dbec', justifyContent: 'flex-end', height: 200}} behavior={'height'}>
         <TextInput
           style={styles.accountName} onChangeText={setAccountName}
           placeholder={'Account Name'} value={accountName}
+          maxLength={35}
         />
       </KeyboardAvoidingView>
       <View style={{ borderColor: '#c9dbec', borderWidth: 1, justifyContent: 'center'}}>
         <TextInput
-          style={styles.accountAmount} onChangeText={setAccountAmount}
+          style={styles.accountAmount} onChangeText={(tx)=> !isNaN(Number(tx))? setAccountAmount(tx) : null}
           placeholder={'Amount'} value={accountAmount}
+          keyboardType={'decimal-pad'}
+          maxLength={10}
         />
       </View>
       <View style={styles.checkBoxView}>
         <CheckBox value={isDefault} onValueChange={setIsDefault}/>
         <Text>Mark As Default Account</Text>
       </View>
-      {/*<View style={{flex: 6}}></View>*/}
       <FabButton
         text='&#10003;' textStyle={{fontSize: 35, color: '#4a6c8c'}}
         onPress={async () => {
-          let {success} = await insertAccount({accountAmount, accountName, isDefault})
+          let {success, errorMessage} = await insertAccount({accountAmount, accountName, isDefault})
           if (success) {
             ToastAndroid.show('Account Saved', ToastAndroid.SHORT)
             props.goBack && props.goBack()
           }
+          else if(!success && errorMessage)
+            ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
+          else
+            ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
         }
         }
         style={{backgroundColor: '#dfebf7', borderColor: '#4a6c8c'}}
