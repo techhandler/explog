@@ -8,7 +8,7 @@ const Footer = (props) => {
       <TouchableOpacity
         style={[styles.items, props.currentScreen === currentScreen.ledger ? {backgroundColor: '#c9dbec'} : null]}
         onPress={() => props.setGlobalState({currentScreen: currentScreen.ledger})}>
-        <Text>Expense</Text>
+        <Text>Expenses</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.items, props.currentScreen === currentScreen.account ? {backgroundColor: '#c9dbec'} : null]}

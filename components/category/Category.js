@@ -90,7 +90,7 @@ export default Category = (props) => {
         onPress={async () => {
           let {success, errorMessage} = await insertCategory(newCategory)
           if (success) {
-            ToastAndroid.show('Expense Saved', ToastAndroid.SHORT)
+            ToastAndroid.show('Category Saved', ToastAndroid.SHORT)
             props.goBack()
           } else if (!success && errorMessage)
             ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
