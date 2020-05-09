@@ -40,6 +40,7 @@ class Accounts extends Component {
 
   async componentDidMount() {
     let {result: accountsData} = await fetchAllAccounts()
+    console.log("accData",accountsData)
     this.setState({accountsData})
   }
 

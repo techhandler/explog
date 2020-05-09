@@ -28,7 +28,10 @@ import { dataBase } from '../Constants'
 
 export const initiateDb = async () => {
   try {
+    // await query('DROP TABLE IF EXISTS account');
+    // await query('DROP TABLE IF EXISTS accountlogs');
     // await query('DROP TABLE IF EXISTS category');
+    // await query('DROP TABLE IF EXISTS ledger');
     await query(`CREATE TABLE IF NOT EXISTS category(c_id INTEGER PRIMARY KEY AUTOINCREMENT, c_name VARCHAR(40), is_default INT(4) DEFAULT 0)`)
     await query(`CREATE TABLE IF NOT EXISTS account(a_id INTEGER PRIMARY KEY AUTOINCREMENT, a_name VARCHAR(40), a_amount INTEGER, is_default INT(4) DEFAULT 0)`)
     await query('CREATE TABLE IF NOT EXISTS ledger(l_id INTEGER PRIMARY KEY AUTOINCREMENT, l_name VARCHAR(60), l_amount INTEGER, l_description VARCHAR(160), l_date VARCHAR(14), c_id INTEGER, a_id INTEGER, FOREIGN KEY (c_id) REFERENCES category (c_id), FOREIGN KEY (a_id) REFERENCES account (a_id))')

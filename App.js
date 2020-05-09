@@ -30,7 +30,7 @@ export default class App extends Component {
       case currentScreen.account:
         return <Accounts setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertAccount:
-        return <AccountInsert/>
+        return <AccountInsert goBack={this.goBack} />
       case currentScreen.detailAccount:
         return <AccountDetail childData={this.state.childData}/>
     }

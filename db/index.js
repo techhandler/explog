@@ -1,7 +1,7 @@
-import db, { initiateDb, query } from './db'
+import db, { initiateDb, query, sqlBatch } from './db'
 import { dataBase } from '../Constants'
 
-export { initiateDb , query}
+export { initiateDb, query, sqlBatch }
 
 export const insertLedger = async ({...obj}) => {
   let newObj = {
@@ -25,7 +25,7 @@ export const insertLedger = async ({...obj}) => {
 export const fetchAllCategory = async () => {
   try {
     // let result = await db.table(dataBase.ledger).find()
-    let result = [];
+    let result = []
     result = result.map(a => ({
       categoryId: a[fields.categoryId],
       categoryName: a[fields.categoryName]
@@ -46,7 +46,7 @@ export const fetchAllLedger = async () => {
       ledgerDate: a[fields.ledgerDate],
       ledgerCategory: a[fields.ledgerCategory],
       ledgerNotes: a[fields.ledgerNotes] || "",
-      accountId : a[fields.accountId]
+      accountId: a[fields.accountId]
     }))
     return {success: true, result}
   } catch (error) {
@@ -61,7 +61,7 @@ export const fetchAllAccounts = async () => {
       accountId: a[fields.accountId],
       accountName: a[fields.accountName],
       accountAmount: a[fields.accountAmount],
-      accountLogs:a[fields.accountLogs],
+      accountLogs: a[fields.accountLogs],
       defaultAccount: a[fields.accountDefault]
     }))
     return {success: true, result}
@@ -95,7 +95,7 @@ const fields = {
   accountName: 'aN',
   accountAmount: 'aA',
   accountDefault: 'd',
-  accountLogs:'lg',
+  accountLogs: 'lg',
   categoryId: 'cI',
   categoryName: 'cN'
 }
