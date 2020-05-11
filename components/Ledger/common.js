@@ -33,14 +33,16 @@ export const isValid = ({...params}) => {
 
 export const insertLedger = async ({...params}) => {
   try {
-    if (!params.ledgerName) return {success: false, errorMessage: 'Name is mandatory'}
-    if (!params.ledgerAmount || !Number(params.ledgerAmount) > 0) return {
+    if (!params.l_name) return {success: false, errorMessage: 'Name is mandatory'}
+    if (!params.l_amount || !Number(params.l_amount) > 0) return {
       success: false,
       errorMessage: 'Invalid Amount'
     }
-    if (!params.ledgerNotes) params.ledgerNotes = null
+    if (!params.l_description) params.l_description = null
+    if (!params.l_date) params.l_date = new Date()
 
-    let result = await query(`INSERT INTO ledger(l_name, l_amount, l_description, c_id, a_id, l_date) VALUES ('${params.l_name}',${params.l_amount},'${params.l_description}','${params.c_id}','${params.a_id}', '${params.l_date || null}')`)
+    let result = await query(`INSERT INTO ledger(l_name, l_amount, l_description, c_id, a_id, l_date) VALUES ('${params.l_name}',${params.l_amount}, ${params.l_description ? `'${params.l_description}'` : null},'${params.c_id}','${params.a_id}', '${params.l_date}')`)
+    await query(`UPDATE account SET a_amount = a_amount - ${params.l_amount} WHERE a_id = ${params.a_id}`)
     return {success: true, result}
   } catch (error) {
     return {success: false, error}
@@ -50,6 +52,7 @@ export const insertLedger = async ({...params}) => {
 export const fetchAllLedger = async () => {
   try {
     let {raw = []} = await query(`SELECT * FROM ledger;`)
+    console.table(raw)
     return {success: true, result: raw}
   } catch (error) {
     return {success: false, error}
@@ -90,7 +93,7 @@ export const updateLedger = async ({l_id, l_name, l_amount, l_description, c_id,
     }
     return {success: true, result: {l_id}}
   } catch (error) {
-    console.log("Errererereresaeas",error)
+    console.log("Errererereresaeas", error)
     return {success: false, error}
   }
 }

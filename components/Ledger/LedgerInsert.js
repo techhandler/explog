@@ -51,8 +51,9 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
 
   const handleOnSave = async () => {
     let params = {a_id : ledgerAccount, l_amount : ledgerAmount, l_name: ledgerName, l_description: ledgerNotes, c_id: ledgerCategory, l_date: ledgerDate, l_id: ledgerId}
-    const {success, errorMessage} = !detailMode ? await insertLedger(params) : await updateLedger(params)
+    const {success, errorMessage, error} = !detailMode ? await insertLedger(params) : await updateLedger(params)
 
+    console.log('error', error);
     console.log('errorMessage', errorMessage)
     console.log('success in inininii', success)
     if (success) {
@@ -85,7 +86,7 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
       <View style={{height: 20}}/>
       <TextInput
         style={style.inputText}
-        onChangeText={setLedgerAmount}
+        onChangeText={t => !isNaN(Number(t)) ? setLedgerAmount(t) : null}
         placeholder={'Amount *'}
         keyboardType={'decimal-pad'}
         editable={editMode}
