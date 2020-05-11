@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage'
 import { openDatabase } from 'react-native-sqlite-storage'
 
 var db1 = openDatabase({name: 'expenses.db'})
@@ -43,46 +42,46 @@ export const initiateDb = async () => {
   }
 }
 
-export default class db {
-  constructor(t) {
-    this.tableName = t
-    return this
-  }
-
-  static table(t) {
-    return new db(t)
-  }
-
-  async insert(obj) {
-    let oldItems = await AsyncStorage.getItem(this.tableName)
-    oldItems = JSON.parse(oldItems)
-    await AsyncStorage.setItem(this.tableName, JSON.stringify([obj, ...oldItems]))
-    return [obj]
-  }
-
-  async find(index) {
-    let items = await AsyncStorage.getItem(this.tableName)
-    if (typeof index === 'number')
-      return JSON.parse(items)[index]
-    return JSON.parse(items)
-  }
-
-  delete(index) {
-    this._delete = index
-    return this
-  }
-
-  update(index, obj) {
-    this._updateIndex = index
-    this._updateValue = obj
-    return this
-  }
-
-  json() {
-    console.log(this)
-    return this
-  }
-}
+// export default class db {
+//   constructor(t) {
+//     this.tableName = t
+//     return this
+//   }
+//
+//   static table(t) {
+//     return new db(t)
+//   }
+//
+//   async insert(obj) {
+//     let oldItems = await AsyncStorage.getItem(this.tableName)
+//     oldItems = JSON.parse(oldItems)
+//     await AsyncStorage.setItem(this.tableName, JSON.stringify([obj, ...oldItems]))
+//     return [obj]
+//   }
+//
+//   async find(index) {
+//     let items = await AsyncStorage.getItem(this.tableName)
+//     if (typeof index === 'number')
+//       return JSON.parse(items)[index]
+//     return JSON.parse(items)
+//   }
+//
+//   delete(index) {
+//     this._delete = index
+//     return this
+//   }
+//
+//   update(index, obj) {
+//     this._updateIndex = index
+//     this._updateValue = obj
+//     return this
+//   }
+//
+//   json() {
+//     console.log(this)
+//     return this
+//   }
+// }
 
 export const query = function (sqlQuery, params = []) {
   return new Promise((resolve, reject) => {
@@ -98,3 +97,5 @@ export const query = function (sqlQuery, params = []) {
     })
   })
 }
+
+export default db1;

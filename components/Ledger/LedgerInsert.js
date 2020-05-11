@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid } from "react-native"
+import { Picker, Text, TextInput, ToastAndroid, View } from "react-native"
 import FabButton from '../FabButton'
-import { Color, style } from '../../Constants'
+import { style } from '../../Constants'
 import { fetchAllAccounts } from '../account/accountService'
 import { fetchAllCategory } from '../category/categoryService'
-import { insertLedger } from './common'
+import { fetchLedgerDetail, insertLedger, updateLedger } from './common'
 
-export default LedgerInsert = ({state}) => {
+export default function LedgerInsert({state, detailMode = false, childData = {ledger: {}}}) {
+
+  let [ledgerId, setLedgerId] = useState('')
   let [ledgerName, setLedgerName] = useState('')
   let [ledgerAmount, setLedgerAmount] = useState('')
   let [ledgerCategory, setLedgerCategory] = useState('')
@@ -15,43 +17,58 @@ export default LedgerInsert = ({state}) => {
   let [ledgerAccount, setLedgerAccount] = useState('')
   let [allAccounts, setAllAccount] = useState([])
   let [allCategories, setAllCategories] = useState([])
-
+  let [editMode, setEditMode] = useState(!detailMode)
 
   useEffect(() => {
+
+    if (detailMode) {
+      fetchLedgerDetail(childData.ledger).then(({result}) => {
+        let {l_id = undefined, l_name = "", l_amount = "", l_description = "", l_date = "", c_id = "", a_id = ""} = result
+        setLedgerId(l_id)
+        setLedgerName(l_name)
+        setLedgerAmount(l_amount)
+        setLedgerNotes(l_description)
+        setLedgerCategory(c_id)
+        setLedgerAccount(a_id)
+        setLedgerDate(l_date)
+      })
+    }
+
     fetchAllAccounts().then(({result = []}) => {
       setAllAccount(result)
-      let accountDefault = result.filter(a => a.is_default)
-      setLedgerAccount(accountDefault && accountDefault[0] ? accountDefault[0].a_id : result[0].a_id)
+      if (!detailMode) {
+        let accountDefault = result.filter(a => a.is_default)
+        setLedgerAccount(accountDefault && accountDefault[0] ? accountDefault[0].a_id : result[0].a_id)
+      }
     })
     fetchAllCategory().then(({result}) => {
       setAllCategories(result)
-      setLedgerCategory(result[0] ? result[0].c_id : "");
+      if (!detailMode) {
+        setLedgerCategory(result[0] ? result[0].c_id : "")
+      }
     })
   }, [state.currentScreen])
 
   const handleOnSave = async () => {
-    const {success, errorMessage, result} = await insertLedger({
-      ledgerAccount,
-      ledgerAmount,
-      ledgerName,
-      ledgerNotes,
-      ledgerCategory,
-      ledgerDate
-    })
+    let params = {a_id : ledgerAccount, l_amount : ledgerAmount, l_name: ledgerName, l_description: ledgerNotes, c_id: ledgerCategory, l_date: ledgerDate, l_id: ledgerId}
+    const {success, errorMessage} = !detailMode ? await insertLedger(params) : await updateLedger(params)
 
+    console.log('errorMessage', errorMessage)
+    console.log('success in inininii', success)
     if (success) {
       ToastAndroid.show('Expense Saved', ToastAndroid.SHORT)
-      setLedgerName('');
-      setLedgerAmount('');
-      setLedgerDate('');
-      setLedgerNotes('');
-
+      if (!detailMode) {
+        setLedgerName('')
+        setLedgerAmount('')
+        setLedgerDate('')
+        setLedgerNotes('')
+      } else {
+        setEditMode(false)
+      }
     } else if (!success && errorMessage)
       ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
     else
-      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
-
-
+      ToastAndroid.show('Something went wrong111', ToastAndroid.SHORT)
   }
 
 
@@ -60,33 +77,39 @@ export default LedgerInsert = ({state}) => {
       <TextInput
         style={style.inputText}
         onChangeText={setLedgerName}
-        placeholder={'Expense'}
+        placeholder={'Expense *'}
         value={ledgerName}
+        editable={editMode}
       />
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Expense Name</Text>
       <View style={{height: 20}}/>
       <TextInput
         style={style.inputText}
         onChangeText={setLedgerAmount}
-        placeholder={'0.00'}
+        placeholder={'Amount *'}
         keyboardType={'decimal-pad'}
+        editable={editMode}
         value={ledgerAmount + ''}
       />
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Expense Amount</Text>
       <View style={{height: 20}}/>
       <TextInput
         value={ledgerNotes + ''}
         style={style.inputText}
-        placeholder={'Description (if any)'}
+        placeholder={'Note'}
         multiline
         numberOfLines={1}
         onChangeText={setLedgerNotes}
-        editable
+        editable={editMode}
         maxLength={200}
       />
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Description [If Any]</Text>
       <View style={{height: 20}}/>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
         <Text style={{flex: 1, textAlignVertical: 'center'}}>Category</Text>
         <Picker
+          enabled={editMode}
           style={{height: 40, flex: 2}}
           selectedValue={ledgerCategory}
           onValueChange={a => setLedgerCategory(a)}>
@@ -98,6 +121,7 @@ export default LedgerInsert = ({state}) => {
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
         <Text style={{flex: 1, textAlignVertical: 'center'}}>Account</Text>
         <Picker
+          enabled={editMode}
           selectedValue={ledgerAccount}
           style={{height: 40, flex: 2}}
           onValueChange={a => setLedgerAccount(a)}>
@@ -111,12 +135,18 @@ export default LedgerInsert = ({state}) => {
 
       <View style={{height: 20}}/>
 
-      <FabButton
+      {!editMode && <FabButton
+        text="&#9998;"
+        textStyle={{fontSize: 30}}
+        onPress={() => setEditMode(true)}
+      />}
+
+      {editMode && <FabButton
         text="&#10003;"
         textStyle={{fontSize: 30}}
         style={{}}
         onPress={() => handleOnSave()}
-      />
+      />}
     </View>
   )
 }

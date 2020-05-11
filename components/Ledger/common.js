@@ -1,5 +1,5 @@
 import { ToastAndroid } from "react-native"
-import { query } from "../../db"
+import { db, query } from "../../db"
 
 const validate = (obj, key) => {
   if (obj.hasOwnProperty(key)) {
@@ -40,7 +40,7 @@ export const insertLedger = async ({...params}) => {
     }
     if (!params.ledgerNotes) params.ledgerNotes = null
 
-    let result = await query(`INSERT INTO ledger(l_name, l_amount, l_description, c_id, a_id) VALUES ('${params.ledgerName}',${params.ledgerAmount},'${params.ledgerNotes}','${params.ledgerCategory}','${params.ledgerAccount}')`)
+    let result = await query(`INSERT INTO ledger(l_name, l_amount, l_description, c_id, a_id, l_date) VALUES ('${params.l_name}',${params.l_amount},'${params.l_description}','${params.c_id}','${params.a_id}', '${params.l_date || null}')`)
     return {success: true, result}
   } catch (error) {
     return {success: false, error}
@@ -52,6 +52,45 @@ export const fetchAllLedger = async () => {
     let {raw = []} = await query(`SELECT * FROM ledger;`)
     return {success: true, result: raw}
   } catch (error) {
+    return {success: false, error}
+  }
+}
+
+export const fetchLedgerDetail = async ({l_id}) => {
+  try {
+    let {raw = []} = await query(`SELECT * FROM ledger WHERE l_id = ${l_id};`)
+    return {success: true, result: raw && raw.length ? raw[0] : {}}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
+
+export const updateLedger = async ({l_id, l_name, l_amount, l_description, c_id, a_id}) => {
+  try {
+    let {raw: oldRecord = []} = await query(`SELECT * FROM ledger WHERE l_id = ${l_id}`)
+    let query1, query2, query3
+    oldRecord = oldRecord[0]
+    if (Number(oldRecord.a_id) === Number(a_id)) {
+      l_amount = l_amount - oldRecord.l_amount
+      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', c_id = ${c_id}, l_amount = l_amount + ${l_amount}  WHERE l_id = ${l_id}`
+      query2 = `UPDATE account SET a_amount = a_amount - ${l_amount} WHERE a_id = ${a_id}`
+      db.transaction(tx => {
+        tx.executeSql(query1)
+        tx.executeSql(query2)
+      }, err => {throw err})
+    } else if (Number(oldRecord.a_id) !== Number(a_id) && !isNaN(Number(a_id)) && !isNaN(Number(a_id))) {
+      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', c_id = ${c_id}, l_amount = ${l_amount}, a_id = ${a_id} WHERE l_id = ${l_id}`
+      query2 = `UPDATE account SET a_amount = a_amount - ${l_amount} WHERE a_id = ${a_id}`
+      query3 = `UPDATE account SET a_amount = a_amount + ${oldRecord.l_amount} WHERE a_id = ${oldRecord.a_id}`
+      db.transaction(tx => {
+        tx.executeSql(query1)
+        tx.executeSql(query2)
+        tx.executeSql(query3)
+      }, err => {throw err})
+    }
+    return {success: true, result: {l_id}}
+  } catch (error) {
+    console.log("Errererereresaeas",error)
     return {success: false, error}
   }
 }
