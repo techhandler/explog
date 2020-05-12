@@ -20,6 +20,7 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
   let [allCategories, setAllCategories] = useState([])
   let [editMode, setEditMode] = useState(!detailMode)
   let [datePickerVisibility, setDatePickerVisibility] = useState(false)
+  let [accountAmountObj, setAccountAmountObj] = useState({total: 0, balance: 0})
 
   useEffect(() => {
 
@@ -51,6 +52,26 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
     })
   }, [state.currentScreen])
 
+  useEffect(() => {
+    if (allAccounts.length && ledgerAccount) {
+      let accountDetail = allAccounts.filter(a => a.a_id === Number(ledgerAccount))
+      if (accountDetail.length) {
+        setAccountAmountObj({
+          total: accountDetail[0].a_amount,
+          balance: ledgerAmount ? accountDetail[0].a_amount - ledgerAmount : accountDetail[0].a_amount
+        })
+      }
+    } else
+      setAccountAmountObj({total: 0, balance: 0})
+  }, [ledgerAccount])
+
+  useEffect(() => {
+    setAccountAmountObj({
+      ...accountAmountObj,
+      balance: accountAmountObj.total - ledgerAmount
+    })
+  }, [ledgerAmount])
+
   const handleOnSave = async () => {
     let params = {
       a_id: ledgerAccount,
@@ -63,9 +84,6 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
     }
     const {success, errorMessage, error} = !detailMode ? await insertLedger(params) : await updateLedger(params)
 
-    console.log('error', error)
-    console.log('errorMessage', errorMessage)
-    console.log('success in inininii', success)
     if (success) {
       ToastAndroid.show('Expense Saved', ToastAndroid.SHORT)
       if (!detailMode) {
@@ -83,36 +101,36 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
   }
 
   const handleDateChange = (e, data) => {
-    setDatePickerVisibility(false);
-    if(data) setLedgerDate(data)
+    setDatePickerVisibility(false)
+    if (data) setLedgerDate(data)
   }
 
-  const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`;
+  const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`
 
   return (
     <View style={style.paper}>
       <TextInput
-        style={style.inputText}
+        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
         onChangeText={setLedgerName}
         placeholder={'Expense *'}
         value={ledgerName}
         editable={editMode}
       />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Expense Name</Text>
-      <View style={{height: 20}}/>
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Name'}</Text>
+      <View style={{height: 16}}/>
       <TextInput
-        style={style.inputText}
+        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
         onChangeText={t => !isNaN(Number(t)) ? setLedgerAmount(t) : null}
         placeholder={'Amount *'}
         keyboardType={'decimal-pad'}
         editable={editMode}
         value={ledgerAmount + ''}
       />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Expense Amount</Text>
-      <View style={{height: 20}}/>
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Amount'}</Text>
+      <View style={{height: 16}}/>
       <TextInput
         value={ledgerNotes + ''}
-        style={style.inputText}
+        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
         placeholder={'Note'}
         multiline
         numberOfLines={1}
@@ -120,16 +138,16 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
         editable={editMode}
         maxLength={200}
       />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>Description [If Any]</Text>
-      <View style={{height: 20}}/>
+      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Description [If Any]'}</Text>
+      <View style={{height: 16}}/>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center'}}>Date</Text>
+        <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Date</Text>
         <TouchableOpacity
           style={{flex: 2}}
           disabled={!editMode}
-          onPress={()=>setDatePickerVisibility(true)}>
-          <Text>{getFormattedDate(ledgerDate)}</Text>
+          onPress={() => setDatePickerVisibility(true)}>
+          <Text style={[!editMode && {color: '#4a6c8c'}]}>{getFormattedDate(ledgerDate)}</Text>
         </TouchableOpacity>
         {datePickerVisibility && <DateTimePicker
           value={ledgerDate}
@@ -137,16 +155,12 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
           display='default'
           onChange={handleDateChange}/>}
       </View>
-
-      <View style={{height: 20}}/>
-
-
-
+      <View style={{height: 16}}/>
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center'}}>Category</Text>
+        <Text style={{flex: 1, textAlignVertical: 'center',color: '#4a6c8c'}}>Category</Text>
         <Picker
           enabled={editMode}
-          style={{height: 40, flex: 2}}
+          style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
           selectedValue={ledgerCategory}
           onValueChange={a => setLedgerCategory(a)}>
           {allCategories.map(a => <Picker.Item label={a.c_name} value={a.c_id} key={a.c_id}/>)}
@@ -155,18 +169,25 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
 
       <View style={{height: 10}}/>
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center'}}>Account</Text>
+        <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Account</Text>
         <Picker
           enabled={editMode}
           selectedValue={ledgerAccount}
-          style={{height: 40, flex: 2}}
+          style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
           onValueChange={a => setLedgerAccount(a)}>
           {allAccounts.map(a => <Picker.Item label={a.a_name} value={a.a_id} key={a.a_id}/>)}
         </Picker>
       </View>
-      <View style={{height: 20}}/>
-
-
+      {
+        !detailMode && <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <Text style={{flex: 1}}/>
+          <View style={{flex: 2}}>
+            <Text style={{color: '#4a6c8c'}}>Amount = {accountAmountObj.total}</Text>
+            <Text style={{color: '#4a6c8c'}}>Balance = {accountAmountObj.balance}</Text>
+          </View>
+        </View>
+      }
+      <View style={{height: 10}}/>
       {!editMode && <FabButton
         text="&#9998;"
         textStyle={{fontSize: 30}}

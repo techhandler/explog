@@ -24,8 +24,7 @@ export default function AccountDetail({childData = {account: {}}, setGlobalState
         setAccountAmount(result.a_amount)
         setAccountLogs(result.logs)
         setIsDefault(Boolean(result.is_default))
-      } else
-        console.log("catch-----")
+      }
     })
   }, [propsState.currentScreen])
 
@@ -99,7 +98,6 @@ export default function AccountDetail({childData = {account: {}}, setGlobalState
         <FlexScreen
           screenLabel={flexScreenOption}
           onSubmit={async (params) => {
-            console.log("childData", childData)
             let {success, errorMessage} = await amountTransaction(params, flexScreenOption, aId)
             if (success) {
               ToastAndroid.show('Saved', ToastAndroid.SHORT)

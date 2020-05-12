@@ -52,7 +52,6 @@ export const insertLedger = async ({...params}) => {
 export const fetchAllLedger = async () => {
   try {
     let {raw = []} = await query(`SELECT * FROM ledger;`)
-    console.table(raw)
     return {success: true, result: raw}
   } catch (error) {
     return {success: false, error}
@@ -93,7 +92,6 @@ export const updateLedger = async ({l_id, l_name, l_amount, l_description, c_id,
     }
     return {success: true, result: {l_id}}
   } catch (error) {
-    console.log("Errererereresaeas", error)
     return {success: false, error}
   }
 }

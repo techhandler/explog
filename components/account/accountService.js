@@ -41,14 +41,12 @@ export const insertAccount = async ({accountAmount, accountName, isDefault}) => 
 
 export const amountTransaction = async ({amount,remarks=null}, process='', aId) => {
   try {
-    console.log("{amount,remarks}, process aId  " + aId, remarks)
     if (!aId) return {success: false}
     if (!amount || !Number(amount) > 0) return {success: false, errorMessage: 'Invalid Amount'}
     await query(`UPDATE account SET a_amount = a_amount + ${process.toLowerCase()==="withdraw" ? (amount * (-1)) : amount} WHERE a_id = ${aId}`)
     await query(`INSERT INTO accountlogs(a_id, ${process.toLowerCase()==="withdraw" ? 'dr_amount' :' cr_amount'}, log_comments) VALUES ('${aId}','${amount}','${remarks}')`)
     return {success: true, result: [{a_id: aId}]}
   } catch (error) {
-    console.log('errrrrr',error);
     return {success: false, error, errorMessage: "Something went wrong1"}
   }
 }

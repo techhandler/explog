@@ -46,6 +46,6 @@ const style = {
   inputText: {
     borderBottomWidth: 1,
     padding: 5,
-    fontSize: 20
+    fontSize: 18
   }
 }
