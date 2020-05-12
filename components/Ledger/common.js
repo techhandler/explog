@@ -68,21 +68,21 @@ export const fetchLedgerDetail = async ({l_id}) => {
   }
 }
 
-export const updateLedger = async ({l_id, l_name, l_amount, l_description, c_id, a_id}) => {
+export const updateLedger = async ({l_id, l_name, l_amount, l_description, c_id, a_id, l_date}) => {
   try {
     let {raw: oldRecord = []} = await query(`SELECT * FROM ledger WHERE l_id = ${l_id}`)
     let query1, query2, query3
     oldRecord = oldRecord[0]
     if (Number(oldRecord.a_id) === Number(a_id)) {
       l_amount = l_amount - oldRecord.l_amount
-      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', c_id = ${c_id}, l_amount = l_amount + ${l_amount}  WHERE l_id = ${l_id}`
+      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', l_date = '${l_date}', c_id = ${c_id}, l_amount = l_amount + ${l_amount}  WHERE l_id = ${l_id}`
       query2 = `UPDATE account SET a_amount = a_amount - ${l_amount} WHERE a_id = ${a_id}`
       db.transaction(tx => {
         tx.executeSql(query1)
         tx.executeSql(query2)
       }, err => {throw err})
     } else if (Number(oldRecord.a_id) !== Number(a_id) && !isNaN(Number(a_id)) && !isNaN(Number(a_id))) {
-      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', c_id = ${c_id}, l_amount = ${l_amount}, a_id = ${a_id} WHERE l_id = ${l_id}`
+      query1 = `UPDATE ledger SET l_name = '${l_name}', l_description = '${l_description}', l_date = '${l_date}', c_id = ${c_id}, l_amount = ${l_amount}, a_id = ${a_id} WHERE l_id = ${l_id}`
       query2 = `UPDATE account SET a_amount = a_amount - ${l_amount} WHERE a_id = ${a_id}`
       query3 = `UPDATE account SET a_amount = a_amount + ${oldRecord.l_amount} WHERE a_id = ${oldRecord.a_id}`
       db.transaction(tx => {

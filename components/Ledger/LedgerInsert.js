@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Picker, Text, TextInput, ToastAndroid, View } from "react-native"
+import { Picker, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native"
+import DateTimePicker from '@react-native-community/datetimepicker'
 import FabButton from '../FabButton'
-import { style } from '../../Constants'
+import { monthNames, style } from '../../Constants'
 import { fetchAllAccounts } from '../account/accountService'
 import { fetchAllCategory } from '../category/categoryService'
 import { fetchLedgerDetail, insertLedger, updateLedger } from './common'
@@ -13,11 +14,12 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
   let [ledgerAmount, setLedgerAmount] = useState('')
   let [ledgerCategory, setLedgerCategory] = useState('')
   let [ledgerNotes, setLedgerNotes] = useState('')
-  let [ledgerDate, setLedgerDate] = useState('')
+  let [ledgerDate, setLedgerDate] = useState(new Date())
   let [ledgerAccount, setLedgerAccount] = useState('')
   let [allAccounts, setAllAccount] = useState([])
   let [allCategories, setAllCategories] = useState([])
   let [editMode, setEditMode] = useState(!detailMode)
+  let [datePickerVisibility, setDatePickerVisibility] = useState(false)
 
   useEffect(() => {
 
@@ -30,7 +32,7 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
         setLedgerNotes(l_description)
         setLedgerCategory(c_id)
         setLedgerAccount(a_id)
-        setLedgerDate(l_date)
+        setLedgerDate(new Date(l_date))
       })
     }
 
@@ -50,10 +52,18 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
   }, [state.currentScreen])
 
   const handleOnSave = async () => {
-    let params = {a_id : ledgerAccount, l_amount : ledgerAmount, l_name: ledgerName, l_description: ledgerNotes, c_id: ledgerCategory, l_date: ledgerDate, l_id: ledgerId}
+    let params = {
+      a_id: ledgerAccount,
+      l_amount: ledgerAmount,
+      l_name: ledgerName,
+      l_description: ledgerNotes,
+      c_id: ledgerCategory,
+      l_date: ledgerDate,
+      l_id: ledgerId
+    }
     const {success, errorMessage, error} = !detailMode ? await insertLedger(params) : await updateLedger(params)
 
-    console.log('error', error);
+    console.log('error', error)
     console.log('errorMessage', errorMessage)
     console.log('success in inininii', success)
     if (success) {
@@ -72,6 +82,12 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
       ToastAndroid.show('Something went wrong111', ToastAndroid.SHORT)
   }
 
+  const handleDateChange = (e, data) => {
+    setDatePickerVisibility(false);
+    if(data) setLedgerDate(data)
+  }
+
+  const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`;
 
   return (
     <View style={style.paper}>
@@ -108,6 +124,25 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
       <View style={{height: 20}}/>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <Text style={{flex: 1, textAlignVertical: 'center'}}>Date</Text>
+        <TouchableOpacity
+          style={{flex: 2}}
+          disabled={!editMode}
+          onPress={()=>setDatePickerVisibility(true)}>
+          <Text>{getFormattedDate(ledgerDate)}</Text>
+        </TouchableOpacity>
+        {datePickerVisibility && <DateTimePicker
+          value={ledgerDate}
+          mode='default'
+          display='default'
+          onChange={handleDateChange}/>}
+      </View>
+
+      <View style={{height: 20}}/>
+
+
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
         <Text style={{flex: 1, textAlignVertical: 'center'}}>Category</Text>
         <Picker
           enabled={editMode}
@@ -130,11 +165,7 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
         </Picker>
       </View>
       <View style={{height: 20}}/>
-      <View>
-        <Text>Date</Text>
-      </View>
 
-      <View style={{height: 20}}/>
 
       {!editMode && <FabButton
         text="&#9998;"
