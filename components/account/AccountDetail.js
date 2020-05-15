@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, TextInput, FlatList, Picker, Alert, ToastAndroid, TouchableOpacity } from "react-native"
-import { currentScreen, monthNames, style } from "../../Constants"
-import { fetchAccountDetail, amountTransaction } from './accountService'
+import { FlatList, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native"
+import { currentScreen, monthNames } from "../../Constants"
+import { amountTransaction, fetchAccountDetail } from './accountService'
 import FabButton from "../FabButton"
 
 export default function AccountDetail({childData = {account: {}}, setGlobalState, state: propsState, goBack}) {
@@ -14,7 +14,7 @@ export default function AccountDetail({childData = {account: {}}, setGlobalState
   let [flexScreenOption, setFlexScreenOption] = useState('')
   let logDate = ""
 
-  const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`
+  const getFormattedDate = (date) => date && date.toString() !== 'Invalid Date' ? `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}` : ""
 
   useEffect(() => {
     fetchAccountDetail(childData.account).then(({success, result}) => {
@@ -105,7 +105,7 @@ export default function AccountDetail({childData = {account: {}}, setGlobalState
             } else if (!success && errorMessage)
               ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
             else
-              ToastAndroid.show('Something went wrong33', ToastAndroid.SHORT)
+              ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
           }}/>
       }</>
   )

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Picker, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native"
+import { Picker, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import FabButton from '../FabButton'
-import { monthNames, style } from '../../Constants'
+import { currentScreen, monthNames, style } from '../../Constants'
 import { fetchAllAccounts } from '../account/accountService'
 import { fetchAllCategory } from '../category/categoryService'
 import { fetchLedgerDetail, insertLedger, updateLedger } from './common'
 
-export default function LedgerInsert({state, detailMode = false, childData = {ledger: {}}}) {
+export default function LedgerInsert({setGlobalState, state, detailMode = false, childData = {ledger: {}}}) {
 
   let [ledgerId, setLedgerId] = useState('')
   let [ledgerName, setLedgerName] = useState('')
@@ -38,6 +38,13 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
     }
 
     fetchAllAccounts().then(({result = []}) => {
+      if(result && !result.length){
+        ToastAndroid.show('Create Account First', ToastAndroid.SHORT)
+        setGlobalState({
+          currentScreen: currentScreen.insertAccount,
+          stack: [state.currentScreen, ...state.stack]
+        })
+      }
       setAllAccount(result)
       if (!detailMode) {
         let accountDefault = result.filter(a => a.is_default)
@@ -97,7 +104,7 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
     } else if (!success && errorMessage)
       ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
     else
-      ToastAndroid.show('Something went wrong111', ToastAndroid.SHORT)
+      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
   }
 
   const handleDateChange = (e, data) => {
@@ -108,98 +115,100 @@ export default function LedgerInsert({state, detailMode = false, childData = {le
   const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`
 
   return (
-    <View style={style.paper}>
-      <TextInput
-        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
-        onChangeText={setLedgerName}
-        placeholder={'Expense *'}
-        value={ledgerName}
-        editable={editMode}
-      />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Name'}</Text>
-      <View style={{height: 16}}/>
-      <TextInput
-        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
-        onChangeText={t => !isNaN(Number(t)) ? setLedgerAmount(t) : null}
-        placeholder={'Amount *'}
-        keyboardType={'decimal-pad'}
-        editable={editMode}
-        value={ledgerAmount + ''}
-      />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Amount'}</Text>
-      <View style={{height: 16}}/>
-      <TextInput
-        value={ledgerNotes + ''}
-        style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor:'#c9dbec'}]}
-        placeholder={'Note'}
-        multiline
-        numberOfLines={1}
-        onChangeText={setLedgerNotes}
-        editable={editMode}
-        maxLength={200}
-      />
-      <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Description [If Any]'}</Text>
-      <View style={{height: 16}}/>
+    <ScrollView style={{flex: 1}}>
+      <View style={style.paper}>
+        <TextInput
+          style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor: '#c9dbec'}]}
+          onChangeText={setLedgerName}
+          placeholder={'Expense *'}
+          value={ledgerName}
+          editable={editMode}
+        />
+        <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Name'}</Text>
+        <View style={{height: 16}}/>
+        <TextInput
+          style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor: '#c9dbec'}]}
+          onChangeText={t => !isNaN(Number(t)) ? setLedgerAmount(t) : null}
+          placeholder={'Amount *'}
+          keyboardType={'decimal-pad'}
+          editable={editMode}
+          value={ledgerAmount + ''}
+        />
+        <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Amount'}</Text>
+        <View style={{height: 16}}/>
+        <TextInput
+          value={ledgerNotes + ''}
+          style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor: '#c9dbec'}]}
+          placeholder={'Note'}
+          multiline
+          numberOfLines={1}
+          onChangeText={setLedgerNotes}
+          editable={editMode}
+          maxLength={200}
+        />
+        <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Description [If Any]'}</Text>
+        <View style={{height: 16}}/>
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Date</Text>
-        <TouchableOpacity
-          style={{flex: 2}}
-          disabled={!editMode}
-          onPress={() => setDatePickerVisibility(true)}>
-          <Text style={[!editMode && {color: '#4a6c8c'}]}>{getFormattedDate(ledgerDate)}</Text>
-        </TouchableOpacity>
-        {datePickerVisibility && <DateTimePicker
-          value={ledgerDate}
-          mode='default'
-          display='default'
-          onChange={handleDateChange}/>}
-      </View>
-      <View style={{height: 16}}/>
-      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center',color: '#4a6c8c'}}>Category</Text>
-        <Picker
-          enabled={editMode}
-          style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
-          selectedValue={ledgerCategory}
-          onValueChange={a => setLedgerCategory(a)}>
-          {allCategories.map(a => <Picker.Item label={a.c_name} value={a.c_id} key={a.c_id}/>)}
-        </Picker>
-      </View>
-
-      <View style={{height: 10}}/>
-      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-        <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Account</Text>
-        <Picker
-          enabled={editMode}
-          selectedValue={ledgerAccount}
-          style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
-          onValueChange={a => setLedgerAccount(a)}>
-          {allAccounts.map(a => <Picker.Item label={a.a_name} value={a.a_id} key={a.a_id}/>)}
-        </Picker>
-      </View>
-      {
-        !detailMode && <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Text style={{flex: 1}}/>
-          <View style={{flex: 2}}>
-            <Text style={{color: '#4a6c8c'}}>Amount = {accountAmountObj.total}</Text>
-            <Text style={{color: '#4a6c8c'}}>Balance = {accountAmountObj.balance}</Text>
-          </View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Date</Text>
+          <TouchableOpacity
+            style={{flex: 2}}
+            disabled={!editMode}
+            onPress={() => setDatePickerVisibility(true)}>
+            <Text style={[!editMode && {color: '#4a6c8c'}]}>{getFormattedDate(ledgerDate)}</Text>
+          </TouchableOpacity>
+          {datePickerVisibility && <DateTimePicker
+            value={ledgerDate}
+            mode='default'
+            display='default'
+            onChange={handleDateChange}/>}
         </View>
-      }
-      <View style={{height: 10}}/>
-      {!editMode && <FabButton
-        text="&#9998;"
-        textStyle={{fontSize: 30}}
-        onPress={() => setEditMode(true)}
-      />}
+        <View style={{height: 16}}/>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Category</Text>
+          <Picker
+            enabled={editMode}
+            style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
+            selectedValue={ledgerCategory}
+            onValueChange={a => setLedgerCategory(a)}>
+            {allCategories.map(a => <Picker.Item label={a.c_name} value={a.c_id} key={a.c_id}/>)}
+          </Picker>
+        </View>
 
-      {editMode && <FabButton
-        text="&#10003;"
-        textStyle={{fontSize: 30}}
-        style={{}}
-        onPress={() => handleOnSave()}
-      />}
-    </View>
+        <View style={{height: 10}}/>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <Text style={{flex: 1, textAlignVertical: 'center', color: '#4a6c8c'}}>Account</Text>
+          <Picker
+            enabled={editMode}
+            selectedValue={ledgerAccount}
+            style={[{height: 40, flex: 2}, !editMode && {color: '#4a6c8c'}]}
+            onValueChange={a => setLedgerAccount(a)}>
+            {allAccounts.map(a => <Picker.Item label={a.a_name} value={a.a_id} key={a.a_id}/>)}
+          </Picker>
+        </View>
+        {
+          !detailMode && <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <Text style={{flex: 1}}/>
+            <View style={{flex: 2}}>
+              <Text style={{color: '#4a6c8c'}}>Amount = {accountAmountObj.total}</Text>
+              <Text style={{color: '#4a6c8c'}}>Balance = {accountAmountObj.balance}</Text>
+            </View>
+          </View>
+        }
+        <View style={{height: 10}}/>
+        {!editMode && <FabButton
+          text="&#9998;"
+          textStyle={{fontSize: 30}}
+          onPress={() => setEditMode(true)}
+        />}
+
+        {editMode && <FabButton
+          text="&#10003;"
+          textStyle={{fontSize: 30}}
+          style={{}}
+          onPress={() => handleOnSave()}
+        />}
+      </View>
+    </ScrollView>
   )
 }

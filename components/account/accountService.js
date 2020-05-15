@@ -32,7 +32,7 @@ export const insertAccount = async ({accountAmount, accountName, isDefault}) => 
       return {success: false, errorMessage: 'Invalid Amount'}
     let result = await query(`INSERT INTO account(a_name, a_amount, is_default) VALUES ('${accountName}','${accountAmount}','${isDefault}')`)
     let aId = result.insertId
-    await query(`INSERT INTO accountlogs(a_id, cr_amount) VALUES ('${aId}','${accountAmount}')`)
+    await query(`INSERT INTO accountlogs(a_id, cr_amount, log_comments) VALUES ('${aId}','${accountAmount}', 'Account Created')`)
     return {success: true, result: [{a_id: aId}]}
   } catch (error) {
     return {success: false, error, errorMessage: "Something went wrong"}
@@ -47,6 +47,6 @@ export const amountTransaction = async ({amount,remarks=null}, process='', aId) 
     await query(`INSERT INTO accountlogs(a_id, ${process.toLowerCase()==="withdraw" ? 'dr_amount' :' cr_amount'}, log_comments) VALUES ('${aId}','${amount}','${remarks}')`)
     return {success: true, result: [{a_id: aId}]}
   } catch (error) {
-    return {success: false, error, errorMessage: "Something went wrong1"}
+    return {success: false, error, errorMessage: "Something went wrong"}
   }
 }

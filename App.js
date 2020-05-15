@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
 import { Ledger, Accounts, AccountDetail, Category, Footer, LedgerInsert, AccountInsert } from "./components"
 import { Color, currentScreen } from "./Constants"
+import SplashScreen from 'react-native-splash-screen'
 import { initiateDb } from './db'
 
 export default class App extends Component {
@@ -22,9 +23,9 @@ export default class App extends Component {
       case currentScreen.ledger:
         return <Ledger setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertLedger:
-        return <LedgerInsert state={this.state}/>
+        return <LedgerInsert setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.detailLedger:
-        return <LedgerInsert detailMode={true} childData={this.state.childData} state={this.state}/>
+        return <LedgerInsert setGlobalState={this.setGlobalState} detailMode={true} childData={this.state.childData} state={this.state}/>
       case currentScreen.account:
         return <Accounts setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertAccount:
@@ -62,6 +63,7 @@ export default class App extends Component {
       "hardwareBackPress",
       this.backAction
     )
+    SplashScreen.hide();
   }
 
   componentWillUnmount() {
