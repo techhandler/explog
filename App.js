@@ -23,9 +23,9 @@ export default class App extends Component {
       case currentScreen.ledger:
         return <Ledger setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertLedger:
-        return <LedgerInsert setGlobalState={this.setGlobalState} state={this.state}/>
+        return <LedgerInsert goBack={this.goBack} state={this.state}/>
       case currentScreen.detailLedger:
-        return <LedgerInsert setGlobalState={this.setGlobalState} detailMode={true} childData={this.state.childData} state={this.state}/>
+        return <LedgerInsert detailMode={true} childData={this.state.childData} state={this.state}/>
       case currentScreen.account:
         return <Accounts setGlobalState={this.setGlobalState} state={this.state}/>
       case currentScreen.insertAccount:

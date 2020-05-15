@@ -54,6 +54,8 @@ export const fetchAllLedger = async () => {
     let {raw = []} = await query(`SELECT * FROM ledger;`)
     return {success: true, result: raw}
   } catch (error) {
+    if (error.message && error.message.indexOf('no such table') >= 0)
+      return {success: true, result: []}
     return {success: false, error}
   }
 }

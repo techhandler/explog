@@ -6,7 +6,7 @@ import { fetchAllAccounts } from "./accountService"
 
 
 const styles = StyleSheet.create({
-  view: {flex: 1},
+  view: {flex: 1, backgroundColor: Color.white},
   title: {
     flex: 1
   },

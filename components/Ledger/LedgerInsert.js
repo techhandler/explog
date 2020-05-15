@@ -7,7 +7,7 @@ import { fetchAllAccounts } from '../account/accountService'
 import { fetchAllCategory } from '../category/categoryService'
 import { fetchLedgerDetail, insertLedger, updateLedger } from './common'
 
-export default function LedgerInsert({setGlobalState, state, detailMode = false, childData = {ledger: {}}}) {
+export default function LedgerInsert({goBack, state, detailMode = false, childData = {ledger: {}}}) {
 
   let [ledgerId, setLedgerId] = useState('')
   let [ledgerName, setLedgerName] = useState('')
@@ -40,22 +40,20 @@ export default function LedgerInsert({setGlobalState, state, detailMode = false,
     fetchAllAccounts().then(({result = []}) => {
       if(result && !result.length){
         ToastAndroid.show('Create Account First', ToastAndroid.SHORT)
-        setGlobalState({
-          currentScreen: currentScreen.insertAccount,
-          stack: [state.currentScreen, ...state.stack]
-        })
+        goBack();
+        return;
       }
       setAllAccount(result)
       if (!detailMode) {
         let accountDefault = result.filter(a => a.is_default)
         setLedgerAccount(accountDefault && accountDefault[0] ? accountDefault[0].a_id : result[0].a_id)
       }
-    })
-    fetchAllCategory().then(({result}) => {
-      setAllCategories(result)
-      if (!detailMode) {
-        setLedgerCategory(result[0] ? result[0].c_id : "")
-      }
+      fetchAllCategory().then(({result}) => {
+        setAllCategories(result)
+        if (!detailMode) {
+          setLedgerCategory(result[0] ? result[0].c_id : "")
+        }
+      })
     })
   }, [state.currentScreen])
 
@@ -115,7 +113,7 @@ export default function LedgerInsert({setGlobalState, state, detailMode = false,
   const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView style={{flex: 1, backgroundColor:'white'}}>
       <View style={style.paper}>
         <TextInput
           style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor: '#c9dbec'}]}
