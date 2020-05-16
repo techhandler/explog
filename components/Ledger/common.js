@@ -60,6 +60,17 @@ export const fetchAllLedger = async () => {
   }
 }
 
+export const fetchAllLedgerForReport = async (firstDate, lastDate) => {
+  try {
+    let {raw = []} = await query(`SELECT * FROM ledger WHERE l_date BETWEEN '${firstDate}' AND '${lastDate}' ORDER BY l_date ASC;`)
+    return {success: true, result: raw}
+  } catch (error) {
+    if (error.message && error.message.indexOf('no such table') >= 0)
+      return {success: true, result: []}
+    return {success: false, error}
+  }
+}
+
 export const fetchLedgerDetail = async ({l_id}) => {
   try {
     let {raw = []} = await query(`SELECT * FROM ledger WHERE l_id = ${l_id};`)

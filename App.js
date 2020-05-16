@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Text, View, StyleSheet, BackHandler, Alert, Button, TouchableOpacity, ToastAndroid } from "react-native"
-import { Ledger, Accounts, AccountDetail, Category, Footer, LedgerInsert, AccountInsert } from "./components"
+import { Ledger, Accounts, AccountDetail, Category, Footer, LedgerInsert, AccountInsert, Report } from "./components"
 import { Color, currentScreen } from "./Constants"
 import SplashScreen from 'react-native-splash-screen'
 import { initiateDb } from './db'
@@ -33,6 +33,8 @@ export default class App extends Component {
       case currentScreen.detailAccount:
       case currentScreen.amountTransactionInAccount:
         return <AccountDetail childData={this.state.childData} setGlobalState={this.setGlobalState} state={this.state}  goBack={this.goBack} />
+      case currentScreen.report:
+        return <Report />
     }
   }
 
@@ -113,6 +115,7 @@ const styles = StyleSheet.create({
 
 const headerObject = {
   ledger: {title: 'Expense', home: true},
+  report: {title: 'Report', home: true},
   account: {title: 'Account', home: true},
   category: {title: 'Category', home: true},
   insertLedger: {title: 'Add Expense'},

@@ -85,7 +85,7 @@ function Item({id, onPress, data: {l_name, l_amount, l_date, l_description}, ind
     <>
       {
         showDateBar() &&
-        <View style={{backgroundColor: '#c9dbec'}}><Text style={{textAlign: 'center'}}>{getFormattedDate(l_date)}</Text></View>
+        <View style={{backgroundColor: '#c9dbec'}}><Text style={{textAlign: 'center', fontSize:10}}>{getFormattedDate(l_date)}</Text></View>
       }
       <TouchableOpacity
         onPress={onPress}

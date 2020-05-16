@@ -8,17 +8,22 @@ const Footer = (props) => {
       <TouchableOpacity
         style={[styles.items, props.currentScreen === currentScreen.ledger ? {backgroundColor: '#c9dbec'} : null]}
         onPress={() => props.setGlobalState({currentScreen: currentScreen.ledger})}>
-        <Text>Expenses</Text>
+        <Text>Expense</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.items, props.currentScreen === currentScreen.account ? {backgroundColor: '#c9dbec'} : null]}
         onPress={() => props.setGlobalState({currentScreen: currentScreen.account})}>
-        <Text>Accounts</Text>
+        <Text>Account</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.items, props.currentScreen === currentScreen.category ? {backgroundColor: '#c9dbec'} : null]}
         onPress={() => props.setGlobalState({currentScreen: currentScreen.category})}>
-        <Text>Categories</Text>
+        <Text>Category</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.items, props.currentScreen === currentScreen.report ? {backgroundColor: '#c9dbec'} : null]}
+        onPress={() => props.setGlobalState({currentScreen: currentScreen.report})}>
+        <Text>Report</Text>
       </TouchableOpacity>
     </View>
   )
@@ -35,6 +40,9 @@ const styles = StyleSheet.create({
   items: {
     flex: 1,
     alignItems: 'center',
-    padding: 15
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 15,
+    paddingTop: 15
   }
 })

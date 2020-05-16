@@ -25,18 +25,19 @@ const dataBase = {
 }
 
 const currentScreen = {
-  ledger:'ledger',
-  account:'account',
-  category:'category',
+  ledger: 'ledger',
+  report: 'report',
+  account: 'account',
+  category: 'category',
   insertLedger: 'insertLedger',
   detailLedger: 'detailLedger',
   insertAccount: 'insertAccount',
   detailAccount: 'detailAccount',
   insertCategory: 'insertCategory',
-  amountTransactionInAccount: 'amountTransactionInAccount',
+  amountTransactionInAccount: 'amountTransactionInAccount'
 }
 
-const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 const style = {
   paper: {
