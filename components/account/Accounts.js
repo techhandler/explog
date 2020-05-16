@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     height: '65%',
-    fontSize: 32,
+    fontSize: 28,
     backgroundColor: '#c9dbec',
-    padding: 15,
+    padding: 11,
     color: '#4a6c8c'
   },
   cardAmount: {
@@ -58,8 +58,8 @@ class Accounts extends Component {
                   stack: [this.props.state.currentScreen, ...this.props.state.stack],
                   childData: {account: item}
                 })}>
-                <Text style={styles.cardHeader}>{item.a_name}</Text>
-                <Text style={styles.cardAmount}>{item.a_amount}</Text>
+                <Text style={styles.cardHeader} numberOfLines={2}>{item.a_name}</Text>
+                <Text style={styles.cardAmount} numberOfLines={1}>{item.a_amount}</Text>
               </TouchableOpacity>
             </View>
           )}

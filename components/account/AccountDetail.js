@@ -158,6 +158,7 @@ const FlexScreen = ({screenLabel, onSubmit}) => {
             onChangeText={setRemarks}
             placeholder={'Note'}
             value={remarks}
+            maxLength={100}
           />
           <Text style={{color: '#c9dbec', textAlign: 'right'}}>Note [If Any]</Text>
         </View>

@@ -94,11 +94,12 @@ export default function LedgerInsert({goBack, state, detailMode = false, childDa
       if (!detailMode) {
         setLedgerName('')
         setLedgerAmount('')
-        setLedgerDate('')
+        setLedgerDate(new Date())
         setLedgerNotes('')
       } else {
         setEditMode(false)
       }
+      setAccountAmountObj({...accountAmountObj, total: accountAmountObj.balance})
     } else if (!success && errorMessage)
       ToastAndroid.show(errorMessage, ToastAndroid.SHORT)
     else
@@ -110,7 +111,7 @@ export default function LedgerInsert({goBack, state, detailMode = false, childDa
     if (data) setLedgerDate(data)
   }
 
-  const getFormattedDate = (date) => `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}`
+  const getFormattedDate = (date) => date ? `${monthNames[date.getMonth()] || "-"} ${date.getDate()}, ${date.getFullYear()}` : "";
 
   return (
     <ScrollView style={{flex: 1, backgroundColor:'white'}}>
@@ -121,6 +122,7 @@ export default function LedgerInsert({goBack, state, detailMode = false, childDa
           placeholder={'Expense *'}
           value={ledgerName}
           editable={editMode}
+          maxLength={58}
         />
         <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Name'}</Text>
         <View style={{height: 16}}/>
@@ -131,18 +133,19 @@ export default function LedgerInsert({goBack, state, detailMode = false, childDa
           keyboardType={'decimal-pad'}
           editable={editMode}
           value={ledgerAmount + ''}
+          maxLength={10}
         />
         <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Expense Amount'}</Text>
         <View style={{height: 16}}/>
         <TextInput
-          value={ledgerNotes + ''}
+          value={ledgerNotes ? ledgerNotes + '' : ""}
           style={[style.inputText, !editMode && {color: '#4a6c8c', borderColor: '#c9dbec'}]}
           placeholder={'Note'}
           multiline
           numberOfLines={1}
           onChangeText={setLedgerNotes}
           editable={editMode}
-          maxLength={200}
+          maxLength={160}
         />
         <Text style={{color: '#c9dbec', textAlign: 'right'}}>{editMode && 'Description [If Any]'}</Text>
         <View style={{height: 16}}/>

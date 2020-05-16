@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
   },
   header: {
     color: '#f6fafd',
-    fontSize: 24,
-    padding: 20,
-    textAlign: 'left',
+    fontSize: 20,
+    padding: 16,
+    textAlign: 'center',
     backgroundColor: '#4a6c8c'
   },
   footer: {

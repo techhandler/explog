@@ -70,6 +70,7 @@ export default Category = (props) => {
               onChangeText={setNewCategory}
               placeholder={'Name *'}
               value={newCategory}
+              maxLength={40}
             />
             <Text style={{color: '#c9dbec', textAlign:'right'}}>Category Name</Text>
           </View>
@@ -108,7 +109,7 @@ export default Category = (props) => {
 function Item({id, onPress, data: {c_name}}) {
   return (
     <View style={{borderBottomWidth: 1, borderColor: '#c9dbec', padding: 10}}>
-      <Text style={{fontSize: 18, color: '#4a6c8c', paddingLeft: 15}}>{c_name}</Text>
+      <Text style={{fontSize: 18, color: '#4a6c8c', paddingLeft: 15}} numberOfLines={1}>{c_name}</Text>
     </View>
   )
 }
